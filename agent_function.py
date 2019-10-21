@@ -26,7 +26,7 @@ def agentFunction(state:dict) -> None:
                 return Action(actionName, direction = choice(['N','L']))
                 
         # last line
-        elif y == size-1:
+        elif x == size-1:
             if 'shine' in perceptions: return Action('pickup')
 
             elif ('breeze' in perceptions) and ('stench' in perceptions):
@@ -67,7 +67,7 @@ def agentFunction(state:dict) -> None:
             elif ('stench' in perceptions):
                 pass
         # last line
-        elif y == size-1:
+        elif x == size-1:
             pass
         # midle lines
         else:
@@ -85,7 +85,7 @@ def agentFunction(state:dict) -> None:
             elif ('stench' in perceptions):
                 pass
         # last line
-        elif y == size-1:
+        elif x == size-1:
             pass
         # midle lines
         else:
