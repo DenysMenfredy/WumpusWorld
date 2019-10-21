@@ -1,4 +1,3 @@
-
 from action import Action
 from random import choice
 
