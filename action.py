@@ -1,4 +1,4 @@
 
 class Action(object):
-    def __init__(self, nome:str, direcao:str = ''):
+    def __init__(self, name:str, direction:str = ''):
         pass
