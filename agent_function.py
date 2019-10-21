@@ -61,17 +61,35 @@ def agentFunction(state:dict) -> None:
         if x == 0:
             if 'shine' in perceptions: return Action('pickup')
             elif ('breeze' in perceptions) and ('stench' in perceptions):
-                pass
+                actionName = 'move' if not arrow else choice(['move','shoot'])
+                return Action(actionName, direction = choice(['O','S']))
             elif ('breeze' in perceptions):
-                pass
+                return Action('move', direction = choice(['O','S']))
             elif ('stench' in perceptions):
-                pass
+                actionName = 'move' if not arrow else choice(['move','shoot'])
+                return Action(actionName, direction = choice(['O','S']))
         # last line
         elif x == size-1:
-            pass
+            if 'shine' in perceptions: return Action('pickup')
+            elif ('breeze' in perceptions) and ('stench' in perceptions):
+                actionName = 'move' if not arrow else choice(['move','shoot'])
+                return Action(actionName, direction = choice(['O','N']))
+            elif ('breeze' in perceptions):
+                return Action('move', direction = choice(['O','N']))
+            elif ('stench' in perceptions):
+                actionName = 'move' if not arrow else choice(['move','shoot'])
+                return Action(actionName, direction = choice(['O','N']))
         # midle lines
         else:
-            pass
+            if 'shine' in perceptions: return Action('pickup')
+            elif ('breeze' in perceptions) and ('stench' in perceptions):
+                actionName = 'move' if not arrow else choice(['move','shoot'])
+                return Action(actionName, direction = choice(['N','O','S']))
+            elif ('breeze' in perceptions):
+                return Action('move', direction = choice(['N','O','S']))
+            elif ('stench' in perceptions):
+                actionName = 'move' if not arrow else choice(['move','shoot'])
+                return Action(actionName, direction = choice(['N','O','S']))
 
     # midle columns
     else:
