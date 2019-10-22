@@ -99,18 +99,45 @@ def agentFunction(state:dict) -> None:
     else:
         # primeira linha
         if x == 0:
-            if ('scream' in perceptions): pass
 
-            elif ('stench' in perceptions): pass
+            if ('scream' in perceptions):
+                return Action('move', direction=choice(['N', 'O', 'L']))
 
-            elif ('breeze' in perceptions): pass
+            elif ('stench' in perceptions):
+                actionName='move' if not arrow else choice(['move', 'shoot'])
+                return Action(actionName, direction=choice(['N', 'O', 'L']))
 
-            elif ('stench' in perceptions): pass
+            elif ('breeze' in perceptions):
+                return Action('move', direction=choice(['N', 'O', 'L']))
 
-            else: return Action('move', direction = choice([]))
+            else: return Action('move', direction=choice(['N', 'O', 'L']))
         # ultima linha
         elif x == size-1:
-            pass
+
+            if ('scream' in perceptions):
+                return Action('move', direction=choice(['L', 'O', 'S']))
+
+            elif ('stench' in perceptions):
+                actionName = 'move' if not arrow else choice(['move', 'shoot'])
+                return Action(actionName, direction=choice(['L', 'O', 'S']))
+
+            elif ('breeze' in perceptions):
+                return Action('move', direction=choice(['L', 'O', 'S']))
+
+            else:
+                return Action('move', direction=choice(['L', 'O', 'S']))
         # linhas do meio
         else:
-            pass
+
+            if ('scream' in perceptions):
+                return Action('move', direction=choice(['L', 'O', 'S', 'N']))
+
+            elif ('stench' in perceptions):
+                actionName = 'move' if not arrow else choice(['move', 'shoot'])
+                return Action(actionName, direction=choice(['L', 'O', 'S', 'N']))
+
+            elif ('breeze' in perceptions):
+                return Action('move', direction=choice(['L', 'O', 'S', 'N']))
+
+            else:
+                return Action('move', direction=choice(['L', 'O', 'S', 'N']))
