@@ -15,6 +15,56 @@ def agentFunction(state:dict) -> None:
             Fedor -> Atirar/Mover (wumpus pode estar vivo ou morto, tenta atirar).
             Brisa -> Mover (nao há nada para se fazer, apenas mover)
             Nada -> Mover (avante!).
+            
+        Estao sendo tratadas as coordenadas em que os comportamentos sao iguais:
+            se estiver na PRIMEIRA COLUNA:
+                se estiver na PRIMEIRA LINHA:
+                    | | | | |
+                    | | | | |
+                    | | | | |
+                    |X| | | |
+                senao se estiver na ULTIMA LINHA:
+                    |X| | | |
+                    | | | | |
+                    | | | | |
+                    | | | | |
+                senao:
+                    | | | | |
+                    |X| | | |
+                    |X| | | |
+                    | | | | |
+            senao se estiver na ULTIMA COLUNA:
+                se estiver na PRIMEIRA LINHA:
+                    | | | | |
+                    | | | | |
+                    | | | | |
+                    | | | |X|
+                senao se estiver na ULTIMA LINHA:
+                    | | | |X|
+                    | | | | |
+                    | | | | |
+                    | | | | |
+                senao:
+                    | | | | |
+                    | | | |X|
+                    | | | |X|
+                    | | | | |
+            senao se estiver nas COLUNAS CENTRAIS:
+                se estiver na PRIMEIRA LINHA:
+                    | | | | |
+                    | | | | |
+                    | | | | |
+                    | |X|X| |
+                senao se estiver na ULTIMA LINHA:
+                    | |X|X| |
+                    | | | | |
+                    | | | | |
+                    | | | | |
+                senao:
+                    | | | | |
+                    | |X|X| |
+                    | |X|X| |
+                    | | | | |
     """
 
     if ('glitter' in perceptions): return Action('pickup')
