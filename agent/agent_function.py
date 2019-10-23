@@ -2,7 +2,7 @@
 from action import Action
 from random import choice
 
-def agentFunction(state:dict) -> None:
+def agentFunction(state:dict) -> Action:
     size:int                = state['size']
     x, y                    = state['coordinates']
     perceptions:list(str)   = state['perceptions']
