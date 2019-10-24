@@ -1,4 +1,4 @@
-# Inteligent Agents for the World of Wumpus
+# Intelligent Agents for the World of Wumpus
 ## About
 This is a project to complete the **Computational Intelligence** discipline, carried out by computer engineering students at the **Federal University of Pará - Tucuruí**.
 
