@@ -25,58 +25,60 @@ class Environment(object):
             print(x,y, end=' ')
             print(obj['name'])
 
-            # verifica se estar na primeira linha
-            if x == 0:
-                self.matrix_perceptions[x + 1][y].append(self.perceptions[obj['name']])
-
-                # verifica se estar na primeira coluna
-                if y == 0:
-                    self.matrix_perceptions[x][y + 1].append(self.perceptions[obj['name']])
-
-                #verifica se estar na ultima coluna
-                elif y == (self.dimension-1):
-                    self.matrix_perceptions[x][y - 1].append(self.perceptions[obj['name']])
-
-                #verifica se estar nas colunas do meio
-                else:
-                    self.matrix_perceptions[x][y+1].append(self.perceptions[obj['name']])
-                    self.matrix_perceptions[x][y-1].append(self.perceptions[obj['name']])
-
-
-            # verifica se estar na ultima linha
-            elif x == (self.dimension - 1):
-                self.matrix_perceptions[x - 1][y].append(self.perceptions[obj['name']])
-
-                # verifica se estar na primeira coluna
-                if y == 0:
-                    self.matrix_perceptions[x][y + 1].append(self.perceptions[obj['name']])
-
-                # verifica se estar na ultima coluna
-                if y == (self.dimension - 1):
-                    self.matrix_perceptions[x][y - 1].append(self.perceptions[obj['name']])
-
-                # verifica se estar nas colunas do meio
-                else:
-                    self.matrix_perceptions[x][y + 1].append(self.perceptions[obj['name']])
-                    self.matrix_perceptions[x][y - 1].append(self.perceptions[obj['name']])
-
-            # verifica se estar nas linhas do meio
+            if obj['name'] == 'gold': self.matrix_perceptions[x][y].append(self.perceptions[obj['name']])
             else:
-                self.matrix_perceptions[x + 1][y].append(self.perceptions[obj['name']])
-                self.matrix_perceptions[x - 1][y].append(self.perceptions[obj['name']])
+                # verifica se estar na primeira linha
+                if x == 0:
+                    self.matrix_perceptions[x + 1][y].append(self.perceptions[obj['name']])
 
-                # verifica se estar na primeira coluna
-                if y == 0:
-                    self.matrix_perceptions[x][y + 1].append(self.perceptions[obj['name']])
+                    # verifica se estar na primeira coluna
+                    if y == 0:
+                        self.matrix_perceptions[x][y + 1].append(self.perceptions[obj['name']])
 
-                # verifica se estar na ultima coluna
-                if y == (self.dimension - 1):
-                    self.matrix_perceptions[x][y - 1].append(self.perceptions[obj['name']])
+                    #verifica se estar na ultima coluna
+                    elif y == (self.dimension-1):
+                        self.matrix_perceptions[x][y - 1].append(self.perceptions[obj['name']])
 
-                # verifica se estar nas colunas do meio
+                    #verifica se estar nas colunas do meio
+                    else:
+                        self.matrix_perceptions[x][y+1].append(self.perceptions[obj['name']])
+                        self.matrix_perceptions[x][y-1].append(self.perceptions[obj['name']])
+
+
+                # verifica se estar na ultima linha
+                elif x == (self.dimension - 1):
+                    self.matrix_perceptions[x - 1][y].append(self.perceptions[obj['name']])
+
+                    # verifica se estar na primeira coluna
+                    if y == 0:
+                        self.matrix_perceptions[x][y + 1].append(self.perceptions[obj['name']])
+
+                    # verifica se estar na ultima coluna
+                    if y == (self.dimension - 1):
+                        self.matrix_perceptions[x][y - 1].append(self.perceptions[obj['name']])
+
+                    # verifica se estar nas colunas do meio
+                    else:
+                        self.matrix_perceptions[x][y + 1].append(self.perceptions[obj['name']])
+                        self.matrix_perceptions[x][y - 1].append(self.perceptions[obj['name']])
+
+                # verifica se estar nas linhas do meio
                 else:
-                    self.matrix_perceptions[x][y + 1].append(self.perceptions[obj['name']])
-                    self.matrix_perceptions[x][y - 1].append(self.perceptions[obj['name']])
+                    self.matrix_perceptions[x + 1][y].append(self.perceptions[obj['name']])
+                    self.matrix_perceptions[x - 1][y].append(self.perceptions[obj['name']])
+
+                    # verifica se estar na primeira coluna
+                    if y == 0:
+                        self.matrix_perceptions[x][y + 1].append(self.perceptions[obj['name']])
+
+                    # verifica se estar na ultima coluna
+                    if y == (self.dimension - 1):
+                        self.matrix_perceptions[x][y - 1].append(self.perceptions[obj['name']])
+
+                    # verifica se estar nas colunas do meio
+                    else:
+                        self.matrix_perceptions[x][y + 1].append(self.perceptions[obj['name']])
+                        self.matrix_perceptions[x][y - 1].append(self.perceptions[obj['name']])
 
 
     def printMatrix(self, coordinate: tuple):

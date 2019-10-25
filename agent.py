@@ -146,18 +146,6 @@ class Agent(object):
         elif y == size-1:
             # primeira linha
             if x == 0:
-                if ('scream' in perceptions): return Action('move', direction = choice(['O','S']))
-
-                elif ('stench' in perceptions):
-                    actionName = 'move' if not arrow else 'shoot'
-                    return Action(actionName, direction = choice(['O','S']))
-
-                elif ('breeze' in perceptions): return Action('move', direction = choice(['O','S']))
-
-                else: return Action('move', direction = choice(['O','S']))
-
-            # ultima linha
-            elif x == size-1:
                 if ('scream' in perceptions): return Action('move', direction = choice(['O','N']))
 
                 elif ('stench' in perceptions):
@@ -167,6 +155,18 @@ class Agent(object):
                 elif ('breeze' in perceptions): return Action('move', direction = choice(['O','N']))
 
                 else: return Action('move', direction = choice(['O','N']))
+
+            # ultima linha
+            elif x == size-1:
+                if ('scream' in perceptions): return Action('move', direction = choice(['O','S']))
+
+                elif ('stench' in perceptions):
+                    actionName = 'move' if not arrow else 'shoot'
+                    return Action(actionName, direction = choice(['O','S']))
+
+                elif ('breeze' in perceptions): return Action('move', direction = choice(['O','S']))
+
+                else: return Action('move', direction = choice(['O','S']))
 
             # linhas do meio
             else:

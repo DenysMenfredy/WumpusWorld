@@ -10,7 +10,7 @@ class Game(object):
             'death': -10,
             'wumpus': 1000,
         }
-        self.limit_move = 20
+        self.limit_move = 50 # prevent infinite loop
 
 
     def start(self,) -> int:
@@ -40,10 +40,10 @@ class Game(object):
                         
             if agent_action.name == 'shoot':
                 self.agent.shoot()
-                coordinate = self.targetCoordinate(self.agent.coordinate, agent_action.direction)
+                targetCoordinate = self.targetCoordinate(self.agent.coordinate, agent_action.direction)
                 print('agent shooted: ' + agent_action.direction)
-                if self.environment.isWumpus(coordinate):
-                    self.environment.removeWumpus(self.agent.coordinate)
+                if self.environment.isWumpus(targetCoordinate):
+                    self.environment.removeWumpus(targetCoordinate)
                     self.agent.score += self.payoff['wumpus']
                     print('agent killed wumpus')
             if agent_action.name == 'pickup':
