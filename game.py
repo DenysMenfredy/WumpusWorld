@@ -10,10 +10,12 @@ class Game(object):
             'death': -10,
             'wumpus': 1000,
         }
+        self.limit_move = 10
 
 
     def start(self,) -> int:
-        while(not self.game_over):
+        while(not self.game_over and self.limit_move != 0):
+            self.environment.printMatrix(self.agent.coordinate)
             perceptions = self.environment.getPerceptions(self.agent.coordinate)
             agent_action = self.agent.act(perceptions)
             self.agent.score += self.payoff['move']
@@ -43,9 +45,9 @@ class Game(object):
 
             if agent_action.name == 'pickup':
                 self.agent.score += self.payoff['gold']
-                self.agent.pickup()
+                self.agent.pickUp()
                 self.environment.removeGold(self.agent.coordinate)
-
+            self.limit_move -= 1
         return self.agent.score
 
     

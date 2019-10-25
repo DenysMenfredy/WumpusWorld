@@ -3,6 +3,11 @@ from random import randrange
 
 class Environment(object):
     def __init__(self, dimension:int, n_pits:int, n_golds:int=1, n_wumpus:int=1):
+        self.perceptions = {
+            "pit": "breeze",
+            "gold": "glitter",
+            "wumpus": "stench",
+        }
         self.matrix = [['empty' for column in range(dimension)] for line in range(dimension)]
         self.matrix[0][0] = 'start'
         self.matrix_perceptions = [[ [] for column in range(dimension)] for line in range(dimension)]
@@ -11,12 +16,6 @@ class Environment(object):
         self.generate({'name': 'gold','amount':n_golds})
         self.generate({'name': 'wumpus','amount':n_wumpus})
         self.screamTrigger = False
-
-        self.perceptions = {
-            "pit": "breeze",
-            "gold": "glitter",
-            "wumpus": "stench"
-        }
 
 
     def generate(self, obj: dict) -> None:
@@ -79,16 +78,18 @@ class Environment(object):
                     self.matrix_perceptions[x][y - 1].append(self.perceptions[obj['name']])
 
 
-    def printMatrix(self):
+    def printMatrix(self, coordinate: tuple):
         output = ''
-        for line in reversed(self.matrix):
-            for house in line:
-                if house == 'wumpus': output += '|W'
-                elif house == 'gold': output += '|G'
-                elif house == 'pit': output += '|P'
-                else : output += '| '
+        for line in range(self.dimension -1, -1):
+            for column in range(self.dimension):
+                if coordinate == (line,  column):
+                    output += '|A'
+                else:
+                    if self.matrix[line][column] == 'wumpus': output += '|W'
+                    elif self.matrix[line][column] == 'gold': output += '|G'
+                    elif self.matrix[line][column] == 'pit': output += '|P'
+                    else : output += '| '
             output += '|\n'
-        #print()
         print(output)
           
     
