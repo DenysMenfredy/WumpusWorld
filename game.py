@@ -12,9 +12,9 @@ class Game(object):
         }
 
 
-    def start(self, ) -> int:
+    def start(self,) -> int:
         while(not self.game_over):
-            perceptions = self.environment.getState(self.agent.coordinate)
+            perceptions = self.environment.getPerceptions(self.agent.coordinate)
             agent_action = self.agent.act(perceptions)
             self.agent.score += self.payoff['move']
 

@@ -4,10 +4,11 @@ from game import Game
 
 def main():
     environment = Environment(dimension = 5, n_pits = 3)
+    environment.printMatrix()
     agent = Agent(5)
 
     game = Game(environment, agent)
-    game.start()
+    #game.start()
 
 if __name__ == '__main__':
     main()
