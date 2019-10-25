@@ -36,7 +36,7 @@ class Environment(object):
 
                 #verifica se estar na ultima coluna
                 elif y == (self.dimension-1):
-                    self.matrix_perceptions[x][y - 2].append(self.perceptions[obj['name']])
+                    self.matrix_perceptions[x][y - 1].append(self.perceptions[obj['name']])
 
                 #verifica se estar nas colunas do meio
                 else:
@@ -46,7 +46,7 @@ class Environment(object):
 
             # verifica se estar na ultima linha
             elif x == (self.dimension - 1):
-                self.matrix_perceptions[x - 2][y].append(self.perceptions[obj['name']])
+                self.matrix_perceptions[x - 1][y].append(self.perceptions[obj['name']])
 
                 # verifica se estar na primeira coluna
                 if y == 0:
@@ -54,7 +54,7 @@ class Environment(object):
 
                 # verifica se estar na ultima coluna
                 if y == (self.dimension - 1):
-                    self.matrix_perceptions[x][y - 2].append(self.perceptions[obj['name']])
+                    self.matrix_perceptions[x][y - 1].append(self.perceptions[obj['name']])
 
                 # verifica se estar nas colunas do meio
                 else:
@@ -72,7 +72,7 @@ class Environment(object):
 
                 # verifica se estar na ultima coluna
                 if y == (self.dimension - 1):
-                    self.matrix_perceptions[x][y - 2].append(self.perceptions[obj['name']])
+                    self.matrix_perceptions[x][y - 1].append(self.perceptions[obj['name']])
 
                 # verifica se estar nas colunas do meio
                 else:
