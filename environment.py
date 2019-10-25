@@ -22,7 +22,8 @@ class Environment(object):
         for _ in range(obj['amount']):
             x,y = self.randomCoordinate()
             self.matrix[x][y] = obj['name']
-            # TODO: GENERATE PERCEPTIONS
+            print(x,y, end=' ')
+            print(obj['name'])
 
             # verifica se estar na primeira linha
             if x == 0:
@@ -80,7 +81,8 @@ class Environment(object):
 
     def printMatrix(self, coordinate: tuple):
         output = ''
-        for line in range(self.dimension -1, -1):
+        #print(coordinate)
+        for line in range(self.dimension -1, -1, -1):
             for column in range(self.dimension):
                 if coordinate == (line,  column):
                     output += '|A'
@@ -96,7 +98,7 @@ class Environment(object):
     def getPerceptions(self, coordinate:tuple)->list:
         perceptions = []
         if self.isPerception(coordinate, 'breeze'): perceptions.append('breeze')
-        if self.isPerception(coordinate, 'stentch'): perceptions.append('stench')
+        if self.isPerception(coordinate, 'stench'): perceptions.append('stench')
         if self.isPerception(coordinate, 'glitter'): perceptions.append('glitter')
         if self.screamTrigger: 
             perceptions.append('scream')
@@ -110,6 +112,8 @@ class Environment(object):
         
     def isPit(self, coordinate:tuple)->bool:
         x, y = coordinate
+        print(x,y)
+        print(self.matrix[x][y])
         return self.matrix[x][y] == 'pit'
 
     def isWumpus(self, coordinate:tuple)->bool:
@@ -127,6 +131,7 @@ class Environment(object):
     def removeGold(self, coordinate:tuple)->None:
         x, y = coordinate
         self.matrix[x][y] = 'empty'
+        self.matrix_perceptions[x][y].remove('glitter')
 
 
     def randomCoordinate(self, )->tuple:

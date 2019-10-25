@@ -10,20 +10,21 @@ class Game(object):
             'death': -10,
             'wumpus': 1000,
         }
-        self.limit_move = 10
+        self.limit_move = 20
 
 
     def start(self,) -> int:
         while(not self.game_over and self.limit_move != 0):
             self.environment.printMatrix(self.agent.coordinate)
             perceptions = self.environment.getPerceptions(self.agent.coordinate)
+            print(perceptions)
             agent_action = self.agent.act(perceptions)
             self.agent.score += self.payoff['move']
-
+            print(self.agent.coordinate)
             if agent_action.name == 'move':
                 self.agent.move(agent_action.direction)
-                coordinate = self.targetCoordinate(self.agent.coordinate, agent_action.direction)
-                print('agent moved')
+                coordinate = self.agent.coordinate
+                print('agent moved ' + agent_action.direction)
                 if self.environment.isPit(coordinate):
                     self.agent.score += self.payoff['death']
                     self.game_over = True
@@ -40,7 +41,7 @@ class Game(object):
             if agent_action.name == 'shoot':
                 self.agent.shoot()
                 coordinate = self.targetCoordinate(self.agent.coordinate, agent_action.direction)
-                print('agent shooted')
+                print('agent shooted: ' + agent_action.direction)
                 if self.environment.isWumpus(coordinate):
                     self.environment.removeWumpus(self.agent.coordinate)
                     self.agent.score += self.payoff['wumpus']
