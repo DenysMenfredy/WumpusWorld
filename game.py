@@ -21,31 +21,33 @@ class Game(object):
             if agent_action.name == 'move':
                 self.agent.move(agent_action.direction)
                 coordinate = self.targetCoordinate(self.agent.coordinate, agent_action.direction)
-
+                print('agent moved')
                 if self.environment.isPit(coordinate):
                     self.agent.score += self.payoff['death']
                     self.game_over = True
-
+                    print('agent died')
                 if self.environment.isWumpus(coordinate):
                     self.agent.score += self.payoff['death']
                     self.game_over = True
-
+                    print('agent died')
                 if self.environment.isExit(coordinate):
-                    if self.agent.hasGold(): self.game_over = True
-
+                    if self.agent.hasGold(): 
+                        self.game_over = True
+                        print('agent wins')
+                        
             if agent_action.name == 'shoot':
                 self.agent.shoot()
                 coordinate = self.targetCoordinate(self.agent.coordinate, agent_action.direction)
-                
+                print('agent shooted')
                 if self.environment.isWumpus(coordinate):
                     self.environment.removeWumpus(self.agent.coordinate)
                     self.agent.score += self.payoff['wumpus']
-
+                    print('agent killed wumpus')
             if agent_action.name == 'pickup':
                 self.agent.score += self.payoff['gold']
                 self.agent.pickup()
                 self.environment.removeGold(self.agent.coordinate)
-
+                print('agent took gold')
         return self.agent.score
 
     
