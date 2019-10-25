@@ -16,12 +16,23 @@ class Environment(object):
         #print(obj['amount'])
         for _ in range(obj['amount']):
             x,y = self.randomCoordinate()
-            print(x,y)
             self.matrix[x][y] = obj['name']
             
     def printMatrix(self):
-      for line in self.matrix:
-          print(line)
+        output = ''
+        for line in reversed(self.matrix):
+            for house in line:
+                if house == 'wumpus': output += '|W'
+                elif house == 'gold': output += '|G'
+                elif house == 'pit': output += '|P'
+                else : output += '| '
+            output += '|\n'
+        
+        print(output)
+          
+
+                  
+          
     
     def getPerceptions(self, coordinate:tuple)->list:
         perceptions = []
