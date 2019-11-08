@@ -1,4 +1,4 @@
-from agents.agent import Agent
+
 from game.environment import Environment as GameEnvironment
 from game.game import Game
 from ga.environment import Environment as GAEnvironment

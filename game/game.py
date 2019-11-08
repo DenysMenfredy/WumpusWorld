@@ -1,6 +1,6 @@
 
 class Game(object):
-    def __init__(self, environment, agent):
+    def __init__(self, environment, agent = None):
         self.environment = environment
         self.agent = agent
         self.game_over = False
@@ -15,18 +15,28 @@ class Game(object):
 
     def start(self,) -> None:
         while(self.agents):
-            
             for agent in self.agents:
                 #self.environment.printMatrix(agent.coordinate)
                 #perceptions = self.environment.getPerceptions(agent.coordinate)
                 #print(perceptions)
                 #agent_action = agent.act(perceptions)
                 agent_action = agent.act()
+                if not agent_action:
+                    print('morreu ' + str(agent.score))
+                    if(agent.score == 0 ): print(agent.chromosome)
+                    self.agents.remove(agent)
+                    continue
+
                 agent.score += self.payoff['move']
                 #print(agent.coordinate)
                 if agent_action.name == 'move':
+
                     agent.move(agent_action.direction)
                     coordinate = agent.coordinate
+                    if self.environment.isValid(coordinate):
+                        agent.hits += 1
+                    else:
+                        agent.errors += 1 
                     #print('agent moved ' + agent_action.direction)
                     if self.environment.isPit(coordinate):
                         agent.score += self.payoff['death']
@@ -47,16 +57,16 @@ class Game(object):
                 if agent_action.name == 'shoot':
                     agent.shoot()
                     targetCoordinate = self.targetCoordinate(agent.coordinate, agent_action.direction)
-                    print('agent shooted: ' + agent_action.direction)
+                    #print('agent shooted: ' + agent_action.direction)
                     if self.environment.isWumpus(targetCoordinate) and not agent.killedWumpus():
-                        self.environment.removeWumpus(targetCoordinate)
+                        agent.killWumpus()
                         agent.score += self.payoff['wumpus']
-                        print('agent killed wumpus')
+                        #print('agent killed wumpus')
                 if agent_action.name == 'pickup' and not agent.hasGold():
                     agent.score += self.payoff['gold']
                     agent.pickUp()
-                    self.environment.removeGold(agent.coordinate)
-                    print('agent took gold')
+
+                    #print('agent took gold')
                 
 
     
@@ -71,5 +81,6 @@ class Game(object):
     def populate(self, population:list):
         for indv in population:
             indv.reset()
-        self.agents = population.copy()
+            self.agents.append(indv)
+        
 

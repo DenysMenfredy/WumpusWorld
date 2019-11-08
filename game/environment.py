@@ -109,17 +109,18 @@ class Environment(object):
 
     def isPerception(self, coordinate, perception)-> bool:
         x,y = coordinate
+        if not self.isValid(coordinate): return False
         return perception in self.matrix_perceptions[x][y]
             
         
     def isPit(self, coordinate:tuple)->bool:
         x, y = coordinate
-        print(x,y)
-        print(self.matrix[x][y])
+        if not self.isValid(coordinate): return False
         return self.matrix[x][y] == 'pit'
 
     def isWumpus(self, coordinate:tuple)->bool:
         x, y = coordinate
+        if not self.isValid(coordinate): return False
         return self.matrix[x][y] == 'wumpus'
 
     def isExit(self, coordinate:tuple)->bool:
@@ -128,10 +129,12 @@ class Environment(object):
     def removeWumpus(self, coordinate:tuple)->None:
         self.screamTrigger = True
         x, y = coordinate
+        if not self.isValid(coordinate): return
         self.matrix[x][y] = 'empty'
 
     def removeGold(self, coordinate:tuple)->None:
         x, y = coordinate
+        if not self.isValid(coordinate): return
         self.matrix[x][y] = 'empty'
         self.matrix_perceptions[x][y].remove('glitter')
 
@@ -142,3 +145,11 @@ class Environment(object):
             x, y = randrange(self.dimension), randrange(self.dimension)
             
         return (x,y)
+
+    def isValid(self, coordinate) -> bool:
+        x , y = coordinate
+        if x >= self.dimension or y >= self.dimension:
+            return False
+        if x < 0 or y < 0:
+            return False
+        return True
