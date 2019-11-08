@@ -1,15 +1,17 @@
-from agent import Agent
-from environment import Environment
-from game import Game
+from agents.agent import Agent
+from game.environment import Environment as GameEnvironment
+from game.game import Game
+from ga.environment import Environment as GAEnvironment
 
 def main():
-    environment = Environment(dimension = 5, n_pits = 3)
-    agent = Agent(5)
-    
+    game_environment = GameEnvironment(dimension = 5, n_pits = 3)
+    game = Game(game_environment)
 
-    game = Game(environment, agent)
-    print('Score: ', game.start())
-    environment.printMatrix(agent.coordinate)
+    ga = GAEnvironment(game)
+    
+    solution = ga.start()
+    
+    print(solution)
     
 if __name__ == '__main__':
     main()
