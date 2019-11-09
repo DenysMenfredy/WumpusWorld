@@ -5,9 +5,9 @@ from agents.ga_agent import GaAgent
 
 class Environment:
     def __init__(self, evaluator, ):
-        self.stop_generation:int = 5
+        self.stop_generation:int = 50
         self.best_individual:GaAgent = None
-        self.size_pop:int = 20
+        self.size_pop:int = 100
         self.crossover_rate: float = 0.9
         self.mutation_rate: float = 0.05
         self.evaluator = evaluator
@@ -15,9 +15,8 @@ class Environment:
     def start(self, )->GaAgent:
         population:list = self.generateInitialPop()
         self.evaluate(population)
-        for geracao in range( self.stop_generation ):
-            #print(population)
-            self.reproduce(population)
+        for _ in range( self.stop_generation ):
+            population = self.reproduce(population)
             self.evaluate(population)
             self.findBest(population)
         self.evaluate([self.best_individual])
@@ -36,17 +35,17 @@ class Environment:
         self.evaluator.start()
         #print(population)
 
-    def reproduce(self, population:list ):
+    def reproduce(self, population:list )->list:
         #print(population)
         mating_pool:list = self.selection(population)
-        new_pop = self.crossover(mating_pool)
+        new_pop:list = self.crossover(mating_pool)
         self.mutate(new_pop)
         population.sort(key=lambda indv: indv.fitness)
         percent = int(self.size_pop * self.crossover_rate )
         percent = percent if percent%2 == 0 else percent + 1
-        print(population)
-        population = new_pop + population[percent: ]
-        print(population)
+        #print(population)
+        return new_pop + population[percent: ]
+        #print(population)
 
     def selection(self, population:list)->list:
         mating_pool = []
@@ -76,12 +75,11 @@ class Environment:
         return new_pop
     
     def onePointCrossover(self, seq1:str, seq2:str)->tuple:
-
-        part1 = randrange(len(seq1))
-        part2 = randrange(len(seq2))
+        p_seq1 = randrange(len(seq1))
+        p_seq2 = randrange(len(seq2))
         
-        seq12 = seq1[:part1] + seq2[part2:]
-        seq21 = seq2[:part2] + seq1[part1:]
+        seq12 = seq1[:p_seq1] + seq2[p_seq2:]
+        seq21 = seq2[:p_seq2] + seq1[p_seq1:]
 
         return (seq12, seq21)
 
@@ -95,21 +93,16 @@ class Environment:
                 indiv.chromosome = indiv.chromosome[:n1] + indiv.chromosome[n2] + indiv.chromosome[n1+1:n2] + indiv.chromosome[n1] + indiv.chromosome[n2+1: ]
 
     def findBest(self, population:list):
-        print(sorted(population, key=lambda indv: indv.fitness))
         best = sorted(population, key=lambda indv: indv.fitness)[-1]
-        
-        
+
         if not self.best_individual:
             self.best_individual = best
-            print(self.best_individual.fitness)
             return
-        # print('-----------------------')
-        # print(best.fitness)
-        # print(self.best_individual.fitness)
-        # print('-----------------------')
-
+        # print(f'\nmelhor da geracao atual: {best}')
+        # print(f'melhor ja encontrado: {self.best_individual}')
         if best.fitness > self.best_individual.fitness:
             self.best_individual = best
+
             
        
 

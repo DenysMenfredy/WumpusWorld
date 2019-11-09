@@ -22,8 +22,6 @@ class Game(object):
                 #agent_action = agent.act(perceptions)
                 agent_action = agent.act()
                 if not agent_action:
-                    print('morreu ' + str(agent.score))
-                    if(agent.score == 0 ): print(agent.chromosome)
                     self.agents.remove(agent)
                     continue
 
@@ -48,11 +46,10 @@ class Game(object):
                         self.agents.remove(agent)
                         continue
                         #print('agent died')
-                    if self.environment.isExit(coordinate):
-                        if agent.hasGold(): 
-                            self.agents.remove(agent)
-                            continue
-                            #print('agent wins')
+                    if self.environment.isExit(coordinate)and agent.hasGold(): 
+                        self.agents.remove(agent)
+                        continue
+                        #print('agent wins')
                             
                 if agent_action.name == 'shoot':
                     agent.shoot()
