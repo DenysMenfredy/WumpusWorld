@@ -4,13 +4,6 @@ class Game(object):
         self.environment = environment
         self.agent = agent
         self.game_over = False
-        self.payoff = {
-            'move': -1,
-            'gold': 50,
-            'death': -20,
-            'wumpus': 50,
-            'left': 100,
-        }
         self.agents = []
 
 
@@ -26,29 +19,26 @@ class Game(object):
                     self.agents.remove(agent)
                     continue
 
-                agent.score += self.payoff['move']
                 #print(agent.coordinate)
                 if agent_action.name == 'move':
 
                     agent.move(agent_action.direction)
                     coordinate = agent.coordinate
-                    if self.environment.isValid(coordinate):
-                        agent.hits += 1
-                    else:
-                        agent.errors += 1 
+                    if self.environment.isValid(coordinate): agent.hits += 1
+                    else: agent.errors += 1 
                     #print('agent moved ' + agent_action.direction)
                     if self.environment.isPit(coordinate):
-                        agent.score += self.payoff['death']
+                        agent.die()
                         self.agents.remove(agent)
                         continue
                         #print('agent died')
                     if self.environment.isWumpus(coordinate) and not agent.killedWumpus():
-                        agent.score += self.payoff['death']
+                        agent.die()
                         self.agents.remove(agent)
                         continue
                         #print('agent died')
                     if self.environment.isExit(coordinate) and agent.hasGold(): 
-                        agent.score += self.payoff['left']
+                        agent.escape()
                         self.agents.remove(agent)
                         continue
                         #print('agent wins')
@@ -59,11 +49,9 @@ class Game(object):
                     #print('agent shooted: ' + agent_action.direction)
                     if self.environment.isWumpus(targetCoordinate) and not agent.killedWumpus():
                         agent.killWumpus()
-                        agent.score += self.payoff['wumpus']
                         #print('agent killed wumpus')
                 if agent_action.name == 'pickup':
                     if not agent.hasGold() and self.environment.isGold(agent.coordinate):
-                        agent.score += self.payoff['gold']
                         agent.pickUp()
 
                         #print('agent took gold')

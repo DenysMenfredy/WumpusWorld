@@ -1,7 +1,7 @@
 from random import randrange, choice
 from game.action import Action, table_of_actions
 class GaAgent(object):
-    size_limit = 30
+    size_limit = 100
 
     def __init__(self, chromosome = None):
         self.chromosome = chromosome if chromosome else self.randomChromosome()
@@ -9,17 +9,27 @@ class GaAgent(object):
     
     def initParams(self,):
         self.action_generator = (act for act in self.chromosome)
+        self.size = len(self.chromosome)
         self.errors = 0
         self.hits = 0
-        self.score = 0
         self.coordinate = (0,0)
         self.arrow = True
-        self.gold = False
-        self.wumpus_killed = False
+        self.got_gold = False
+        self.wumpus_died = False
+        self.agent_died = False
+        self.escaped = False
 
     @property
     def fitness(self, ):
-        return (self.score * 5) + (self.errors * -2) + (self.hits * 2)
+        return  (
+              (int(self.got_gold)       * 250) 
+            + (int(self.wumpus_died)    * 500) 
+            + (int(self.agent_died)     * -100)
+            + (int(self.escaped)        * 5000) 
+            + (self.size                * -2)
+            + (self.errors              * -1)
+            + (self.hits                * 1)
+        )
 
     def randomChromosome(self,):
         rand_size = randrange(3, self.size_limit)
@@ -34,10 +44,10 @@ class GaAgent(object):
         self.initParams()
 
     def killedWumpus(self,)->bool:
-        return self.wumpus_killed
+        return self.wumpus_died
     
     def killWumpus(self,):
-        self.wumpus_killed = True
+        self.wumpus_died = True
 
     def act(self, ) -> Action:
         try:
@@ -59,10 +69,16 @@ class GaAgent(object):
         self.arrow = False
 
     def pickUp(self,):
-        self.gold = True
+        self.got_gold = True
 
     def hasGold(self, )->bool:
-        return self.gold
+        return self.got_gold
+
+    def die(self,):
+        self.agent_died = True
+
+    def escape(self,):
+        self.escaped = True
 
     def __repr__(self,) ->str :
-        return f'<\n\tFitness: {self.fitness}\n\tErrors: {self.errors}\n\tHits:{self.hits}\n\tScore: {self.score}\n\tChromosome: {self.chromosome}\n>'
+        return f'<\n\tFitness: {self.fitness}\n\tErrors: {self.errors}\n\tHits:{self.hits}\n\tChromosome: {self.chromosome}\n>'
