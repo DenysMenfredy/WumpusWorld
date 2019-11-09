@@ -5,7 +5,7 @@ from agents.ga_agent import GaAgent
 
 class Environment:
     def __init__(self, evaluator, ):
-        self.stop_generation:int = 50
+        self.stop_generation:int = 100
         self.best_individual:GaAgent = None
         self.size_pop:int = 100
         self.crossover_rate: float = 0.9

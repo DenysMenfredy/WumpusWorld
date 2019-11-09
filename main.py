@@ -10,7 +10,7 @@ def main():
     ga = GAEnvironment(game)
     
     solution = ga.start()
-    
+    game_environment.printMatrix(solution.coordinate)
     print(solution)
     
 if __name__ == '__main__':

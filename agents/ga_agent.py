@@ -1,7 +1,7 @@
 from random import randrange, choice
 from game.action import Action, table_of_actions
 class GaAgent(object):
-    size_limit = 50
+    size_limit = 30
 
     def __init__(self, chromosome = None):
         self.chromosome = chromosome if chromosome else self.randomChromosome()
@@ -19,7 +19,7 @@ class GaAgent(object):
 
     @property
     def fitness(self, ):
-        return (self.score * 10) + (self.errors * -2) + (self.hits * 2)
+        return (self.score * 5) + (self.errors * -2) + (self.hits * 2)
 
     def randomChromosome(self,):
         rand_size = randrange(3, self.size_limit)

@@ -7,8 +7,9 @@ class Game(object):
         self.payoff = {
             'move': -1,
             'gold': 50,
-            'death': -10,
-            'wumpus': 1000,
+            'death': -20,
+            'wumpus': 50,
+            'left': 100,
         }
         self.agents = []
 
@@ -46,7 +47,8 @@ class Game(object):
                         self.agents.remove(agent)
                         continue
                         #print('agent died')
-                    if self.environment.isExit(coordinate)and agent.hasGold(): 
+                    if self.environment.isExit(coordinate) and agent.hasGold(): 
+                        agent.score += self.payoff['left']
                         self.agents.remove(agent)
                         continue
                         #print('agent wins')
@@ -59,11 +61,12 @@ class Game(object):
                         agent.killWumpus()
                         agent.score += self.payoff['wumpus']
                         #print('agent killed wumpus')
-                if agent_action.name == 'pickup' and not agent.hasGold():
-                    agent.score += self.payoff['gold']
-                    agent.pickUp()
+                if agent_action.name == 'pickup':
+                    if not agent.hasGold() and self.environment.isGold(agent.coordinate):
+                        agent.score += self.payoff['gold']
+                        agent.pickUp()
 
-                    #print('agent took gold')
+                        #print('agent took gold')
                 
 
     

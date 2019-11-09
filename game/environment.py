@@ -123,6 +123,11 @@ class Environment(object):
         if not self.isValid(coordinate): return False
         return self.matrix[x][y] == 'wumpus'
 
+    def isGold(self, coordinate:tuple)->bool:
+        x, y = coordinate
+        if not self.isValid(coordinate): return False
+        return self.matrix[x][y] == 'gold'
+
     def isExit(self, coordinate:tuple)->bool:
         return coordinate == (0,0)
 
