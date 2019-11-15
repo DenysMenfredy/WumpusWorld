@@ -5,10 +5,17 @@ class Game(object):
         self.agent = agent
         self.game_over = False
         self.agents = []
+        self.screen = None
 
 
     def start(self,) -> None:
+        self.screen.show(self.environment.dimension)
+        self.screen.addWumpus(self.environment.getObjectCoord("wumpus"))
+        self.screen.addPit(self.environment.getObjectCoord("pit"))
+        self.screen.addGold(self.environment.getObjectCoord("gold"))
+
         while(self.agents):
+            # self.screen.addAgent(self.agents)
             for agent in self.agents:
                 #self.environment.printMatrix(agent.coordinate)
                 #perceptions = self.environment.getPerceptions(agent.coordinate)
@@ -21,18 +28,20 @@ class Game(object):
 
                 #print(agent.coordinate)
                 if agent_action.name == 'move':
-
+                    self.screen.moveAgent(agent, agent_action.direction)
                     agent.move(agent_action.direction)
                     coordinate = agent.coordinate
                     if self.environment.isValid(coordinate): agent.hits += 1
                     else: agent.errors += 1 
                     #print('agent moved ' + agent_action.direction)
                     if self.environment.isPit(coordinate):
+                        self.screen.killAgent(agent)
                         agent.die()
                         self.agents.remove(agent)
                         continue
                         #print('agent died')
                     if self.environment.isWumpus(coordinate) and not agent.killedWumpus():
+                        self.screen.killAgent(agent)
                         agent.die()
                         self.agents.remove(agent)
                         continue
@@ -71,4 +80,3 @@ class Game(object):
             indv.reset()
             self.agents.append(indv)
         
-

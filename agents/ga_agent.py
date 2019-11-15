@@ -18,6 +18,7 @@ class GaAgent(object):
         self.wumpus_died = False
         self.agent_died = False
         self.escaped = False
+        self.id = None
 
     @property
     def fitness(self, ):

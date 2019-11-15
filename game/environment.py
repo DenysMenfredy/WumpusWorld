@@ -16,11 +16,17 @@ class Environment(object):
         self.generate({'name': 'gold','amount':n_golds})
         self.generate({'name': 'wumpus','amount':n_wumpus})
         self.screamTrigger = False
+        self.coordinate = {
+            "pit":[],
+            "wumpus":[],
+            "gold":[]
+        }
 
 
     def generate(self, obj: dict) -> None:
         for _ in range(obj['amount']):
             x,y = self.randomCoordinate()
+            self.coordinate[obj["name"]].append((x,y))
             self.matrix[x][y] = obj['name']
             print(x,y, end=' ')
             print(obj['name'])
@@ -158,3 +164,5 @@ class Environment(object):
         if x < 0 or y < 0:
             return False
         return True
+    
+    def getObjectCoord(self, name: str): return self.coordinate[name]
