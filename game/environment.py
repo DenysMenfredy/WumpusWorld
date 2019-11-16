@@ -12,15 +12,16 @@ class Environment(object):
         self.matrix[0][0] = 'start'
         self.matrix_perceptions = [[ [] for column in range(dimension)] for line in range(dimension)]
         self.dimension = dimension
-        self.generate({'name': 'pit','amount':n_pits})
-        self.generate({'name': 'gold','amount':n_golds})
-        self.generate({'name': 'wumpus','amount':n_wumpus})
-        self.screamTrigger = False
         self.coordinate = {
             "pit":[],
             "wumpus":[],
             "gold":[]
         }
+        self.generate({'name': 'pit','amount':n_pits})
+        self.generate({'name': 'gold','amount':n_golds})
+        self.generate({'name': 'wumpus','amount':n_wumpus})
+        self.screamTrigger = False
+       
 
 
     def generate(self, obj: dict) -> None:

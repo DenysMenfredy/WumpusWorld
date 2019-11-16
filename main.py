@@ -4,7 +4,7 @@ from game.game import Game
 from ga.environment import Environment as GAEnvironment
 
 def main():
-    game_environment = GameEnvironment(dimension = 5, n_pits = 3)
+    game_environment = GameEnvironment(dimension = 5, n_pits = 8)
     game = Game(game_environment)
 
     ga = GAEnvironment(game)
@@ -15,3 +15,4 @@ def main():
     
 if __name__ == '__main__':
     main()
+    #quit()

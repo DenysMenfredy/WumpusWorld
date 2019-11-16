@@ -22,14 +22,16 @@ class GaAgent(object):
 
     @property
     def fitness(self, ):
+        x,y = self.coordinate
         return  (
               (int(self.got_gold)       * 250) 
-            + (int(self.wumpus_died)    * 500) 
-            + (int(self.agent_died)     * -100)
-            + (int(self.escaped)        * 5000) 
-            + (self.size                * -2)
-            + (self.errors              * -1)
-            + (self.hits                * 1)
+            + (int(self.wumpus_died)    * 300) 
+            + (int(self.agent_died)     * -10)
+            + (int(self.escaped)        * 500) 
+            + (self.size                * -1.3)
+            + (self.errors              * -2)
+            #+ (self.hits                * 1.5)
+            - ((abs(x)+ abs(y))         * 5)
         )
 
     def randomChromosome(self,):
@@ -74,6 +76,9 @@ class GaAgent(object):
 
     def hasGold(self, )->bool:
         return self.got_gold
+    
+    def hasArrow(self, )->bool:
+        return self.arrow
 
     def die(self,):
         self.agent_died = True

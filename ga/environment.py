@@ -5,9 +5,9 @@ from agents.ga_agent import GaAgent
 
 class Environment:
     def __init__(self, evaluator, ):
-        self.stop_generation:int = 500
+        self.stop_generation:int = 70
         self.best_individual:GaAgent = None
-        self.size_pop:int = 100
+        self.size_pop:int = 150
         self.crossover_rate: float = 0.9
         self.mutation_rate: float = 0.05
         self.evaluator = evaluator
@@ -15,11 +15,11 @@ class Environment:
     def start(self, )->GaAgent:
         population:list = self.generateInitialPop()
         self.evaluate(population)
-        for _ in range( self.stop_generation ):
+        for generation in range( 1, self.stop_generation ):
             population = self.reproduce(population)
-            self.evaluate(population)
             self.findBest(population)
-        self.evaluate([self.best_individual])
+            self.evaluate(population, generation, self.best_individual.fitness)
+        self.evaluate([self.best_individual], generation = "x")
 
         return self.best_individual
     
@@ -28,11 +28,11 @@ class Environment:
         #print(temp_population)
         return temp_population
 
-    def evaluate(self, population):
+    def evaluate(self, population, generation = 0, fitness = 0):
         #print(len(population))
         self.evaluator.populate(population)
         #print(population)
-        self.evaluator.start()
+        self.evaluator.start(generation, fitness)
         #print(population)
 
     def reproduce(self, population:list )->list:
@@ -68,7 +68,7 @@ class Environment:
         while mating_pool:
             indv = mating_pool.pop(randrange(size))
             indv2 = mating_pool.pop(randrange(size - 1))
-            chrm1, chrm2 = self.onePointCrossover(indv.chromosome,indv2.chromosome)
+            chrm1, chrm2 = self.doublePointCrossover(indv.chromosome,indv2.chromosome)
             new_pop.append(GaAgent(chrm1))
             new_pop.append(GaAgent(chrm2))
             size -= 2
@@ -80,6 +80,15 @@ class Environment:
         
         seq12 = seq1[:p_seq1] + seq2[p_seq2:]
         seq21 = seq2[:p_seq2] + seq1[p_seq1:]
+
+        return (seq12, seq21)
+    
+    def doublePointCrossover(self, seq1:str, seq2:str)->tuple:
+        p_seq1 = sorted([randrange(len(seq1)), randrange(len(seq1))])
+        p_seq2 = sorted([randrange(len(seq2)), randrange(len(seq2))])
+                
+        seq12 = seq1[:p_seq1[0]] +seq2[p_seq2[0]:p_seq2[1]] +seq1[p_seq1[1]:]
+        seq21 = seq2[:p_seq2[0]] + seq1[p_seq1[0]:p_seq1[1]]+seq2[p_seq1[1]:]
 
         return (seq12, seq21)
 
