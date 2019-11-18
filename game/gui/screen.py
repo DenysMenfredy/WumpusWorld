@@ -1,4 +1,6 @@
 import pygame
+import os
+
 from agents.ga_agent import GaAgent as Agent
 WHITE = (200,200,200)
 BACKGROUND = (155,155,155)
@@ -27,14 +29,14 @@ class Screen(object):
         self.clock = pygame.time.Clock()
         self.fps = 120
 
-    def show(self, dimension, generation, fitness):
+    def show(self, dimension, generation, best_solution):
         pygame.init()
         self.screen = pygame.display.set_mode((1000, 600))
 
         self.WIDTH = self.screen.get_width()
         self.HEIGHT = self.screen.get_height()
         self.generation = generation
-        self.fitness = fitness
+        self.best_solution = best_solution
         self.initial_x, self.initial_y = self.WIDTH//4, 50
         self.square_size = self.HEIGHT - (self.HEIGHT//6)
         self.square_x = self.initial_x + self.square_size
@@ -46,14 +48,18 @@ class Screen(object):
     
     def updateText(self,):
         font = pygame.font.Font('freesansbold.ttf', 32)
-        text = font.render('Generation {} || Best Score: {}'.format(self.generation,self.score), True, WHITE, BACKGROUND)
+        infos = f'Generation {self.generation}'
+        if self.best_solution: 
+            id_sol, fit_sol = self.best_solution.id, round(self.best_solution.fitness,2)
+            infos += f' -- Best Solution: ID({id_sol}), Fitness({fit_sol})'
+        text = font.render(infos, True, WHITE, BACKGROUND)
         textRect = text.get_rect()
         textRect.center = (self.WIDTH // 2, 25)
     
     def loadComponets(self,):
         self.img_wumpus = [
-            pygame.image.load('/home/denysm7/I.C/wumpus/game/gui/img/monster.png'), 
-            pygame.image.load('/home/denysm7/I.C/wumpus/game/gui/img/monster.png')
+            pygame.image.load(os.path.abspath('game/gui/img/monster.png')), 
+            pygame.image.load(os.path.abspath('game/gui/img/monster.png'))
         ]
 
         self.img_wumpus = [pygame.transform.scale(img, (self.part-1,self.part-1)) for img in self.img_wumpus]
@@ -61,26 +67,26 @@ class Screen(object):
         self.img_wumpus[1] = pygame.transform.rotate(self.img_wumpus[1],5)
 
         self.img_pit = [
-            pygame.image.load('/home/denysm7/I.C/wumpus/game/gui/img/hole.png'),
+            pygame.image.load(os.path.abspath('game/gui/img/hole.png')),
         ]
         self.img_pit = [pygame.transform.scale(img, (self.part-1,self.part-1)) for img in self.img_pit]
 
         self.img_gold = [
-            pygame.image.load('/home/denysm7/I.C/wumpus/game/gui/img/gold.png'),
+            pygame.image.load(os.path.abspath('game/gui/img/gold.png')),
         ]
         self.img_gold = [pygame.transform.scale(img, (self.part-1,self.part-1)) for img in self.img_gold]
 
         self.img_agent = [
-            pygame.image.load('/home/denysm7/I.C/wumpus/game/gui/img/man.png'),
+            pygame.image.load(os.path.abspath('game/gui/img/man.png')),
         ]
         
         self.img_agent = [pygame.transform.scale(img, (self.part-1,self.part-1)) for img in self.img_agent]
 
         self.img_status_agent ={
-            "success":pygame.image.load('/home/denysm7/I.C/wumpus/game/gui/img/success.png'), 
-            "died": pygame.image.load('/home/denysm7/I.C/wumpus/game/gui/img/gravestone.png'),
-            "got_gold": pygame.image.load('/home/denysm7/I.C/wumpus/game/gui/img/robber.png'),
-            "killed_wumpus":pygame.image.load('/home/denysm7/I.C/wumpus/game/gui/img/superhero.png')
+            "success":pygame.image.load(os.path.abspath('game/gui/img/success.png')), 
+            "died": pygame.image.load(os.path.abspath('game/gui/img/gravestone.png')),
+            "got_gold": pygame.image.load(os.path.abspath('game/gui/img/robber.png')),
+            "killed_wumpus":pygame.image.load(os.path.abspath('game/gui/img/superhero.png'))
          }
         
         self.img_status_agent = {
@@ -152,7 +158,11 @@ class Screen(object):
         
     def printInfo(self,):
         font = pygame.font.Font('freesansbold.ttf', 32)
-        text = font.render('Generation {} || Best Fitness {}'.format(self.generation, self.fitness), True, WHITE, BACKGROUND)
+        infos = f'Generation {self.generation}'
+        if self.best_solution: 
+            id_sol, fit_sol = self.best_solution.id, round(self.best_solution.fitness,2)
+            infos += f' -- Best Solution: ID({id_sol}), Fitness({fit_sol})'
+        text = font.render(infos, True, WHITE, BACKGROUND)
         textRect = text.get_rect()
         textRect.center = (self.WIDTH // 2, 25)  
         self.screen.blit(text, textRect) 

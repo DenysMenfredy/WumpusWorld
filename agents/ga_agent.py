@@ -3,8 +3,9 @@ from game.action import Action, table_of_actions
 class GaAgent(object):
     size_limit = 100
 
-    def __init__(self, chromosome = None):
+    def __init__(self, generation, count, chromosome = None):
         self.chromosome = chromosome if chromosome else self.randomChromosome()
+        self.id = f'{generation}.{count}'
         self.initParams()
     
     def initParams(self,):
@@ -18,7 +19,6 @@ class GaAgent(object):
         self.wumpus_died = False
         self.agent_died = False
         self.escaped = False
-        self.id = None
 
     @property
     def fitness(self, ):

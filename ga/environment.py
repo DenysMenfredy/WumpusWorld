@@ -16,36 +16,29 @@ class Environment:
         population:list = self.generateInitialPop()
         self.evaluate(population)
         for generation in range( 1, self.stop_generation ):
-            population = self.reproduce(population)
+            population = self.reproduce(population, generation)
             self.findBest(population)
-            self.evaluate(population, generation, self.best_individual.fitness)
+            self.evaluate(population, generation, self.best_individual)
         self.evaluate([self.best_individual], generation = "x")
 
         return self.best_individual
     
     def generateInitialPop(self, )->list:
-        temp_population = [GaAgent() for _ in range(self.size_pop) ]
-        #print(temp_population)
+        temp_population = [GaAgent(generation=0, count=i) for i in range(self.size_pop) ]
         return temp_population
 
-    def evaluate(self, population, generation = 0, fitness = 0):
-        #print(len(population))
+    def evaluate(self, population, generation=0, best_individual=None):
         self.evaluator.populate(population)
-        #print(population)
-        self.evaluator.start(generation, fitness)
-        #print(population)
+        self.evaluator.start(generation, best_individual)
 
-    def reproduce(self, population:list )->list:
-        #print(population)
+    def reproduce(self, population:list , generation:int)->list:
         mating_pool:list = self.selection(population)
-        new_pop:list = self.crossover(mating_pool)
+        new_pop:list = self.crossover(mating_pool,generation)
         self.mutate(new_pop)
         population.sort(key=lambda indv: indv.fitness)
         percent = int(self.size_pop * self.crossover_rate )
         percent = percent if percent%2 == 0 else percent + 1
-        #print(population)
         return new_pop + population[percent: ]
-        #print(population)
 
     def selection(self, population:list)->list:
         mating_pool = []
@@ -54,23 +47,23 @@ class Environment:
         percent = percent if percent%2 == 0 else percent + 1 
     
         for _ in range(percent):
-            #print(population)
             selecteds: list = sample(population, amount)
             selecteds.sort(key = lambda indv: indv.fitness)
-            #print(selecteds)
             winner = selecteds[-1]
             mating_pool.append(winner)
         return mating_pool
     
-    def crossover(self,mating_pool: list) -> list:
+    def crossover(self,mating_pool:list, generation:int) -> list:
         size = len(mating_pool)
         new_pop = []
+        indv_count = 0
         while mating_pool:
             indv = mating_pool.pop(randrange(size))
             indv2 = mating_pool.pop(randrange(size - 1))
             chrm1, chrm2 = self.doublePointCrossover(indv.chromosome,indv2.chromosome)
-            new_pop.append(GaAgent(chrm1))
-            new_pop.append(GaAgent(chrm2))
+            new_pop.append(GaAgent(chromosome=chrm1, generation=generation,count=indv_count))
+            new_pop.append(GaAgent(chromosome=chrm2, generation=generation,count=indv_count+1))
+            indv_count += 2
             size -= 2
         return new_pop
     
@@ -107,8 +100,6 @@ class Environment:
         if not self.best_individual:
             self.best_individual = best
             return
-        # print(f'\nmelhor da geracao atual: {best}')
-        # print(f'melhor ja encontrado: {self.best_individual}')
         if best.fitness > self.best_individual.fitness:
             self.best_individual = best
 

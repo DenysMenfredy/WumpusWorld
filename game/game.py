@@ -1,22 +1,24 @@
 from .gui.screen import Screen
 class Game(object):
-    def __init__(self, environment, agent = None):
+    def __init__(self, environment, gui_enabled, agent = None):
         self.environment = environment
         self.agent = agent
         self.game_over = False
         self.agents = []
         self.screen = Screen()
+        self.gui_enabled = gui_enabled
 
 
-    def start(self, generation, fitness) -> None:
-        self.screen.show(self.environment.dimension, generation, fitness)
-        self.screen.addAgents(self.agents)
-        self.screen.addWumpus(self.environment.getObjectCoord("wumpus"))
-        self.screen.addPits(self.environment.getObjectCoord("pit"))
-        self.screen.addGold(self.environment.getObjectCoord("gold"))
+    def start(self, generation, best_solution) -> None:
+        if self.gui_enabled:
+            self.screen.show(self.environment.dimension, generation, best_solution)
+            self.screen.addAgents(self.agents)
+            self.screen.addWumpus(self.environment.getObjectCoord("wumpus"))
+            self.screen.addPits(self.environment.getObjectCoord("pit"))
+            self.screen.addGold(self.environment.getObjectCoord("gold"))
         
         while(self.agents):
-            self.screen.updateComponents()
+            if self.gui_enabled: self.screen.updateComponents()
             for agent in self.agents:
                 #self.environment.printMatrix(agent.coordinate)
                 #perceptions = self.environment.getPerceptions(agent.coordinate)
@@ -72,7 +74,7 @@ class Game(object):
                         pass
 
                         #print('agent took gold')
-        self.screen.updateComponents()
+        if self.gui_enabled: self.screen.updateComponents()
                 
 
     
