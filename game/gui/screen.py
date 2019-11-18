@@ -37,24 +37,14 @@ class Screen(object):
         self.HEIGHT = self.screen.get_height()
         self.generation = generation
         self.best_solution = best_solution
-        self.initial_x, self.initial_y = self.WIDTH//4, 50
-        self.square_size = self.HEIGHT - (self.HEIGHT//6)
+        self.initial_x, self.initial_y = self.WIDTH//3, self.HEIGHT//4
+        self.square_size = self.HEIGHT//2
         self.square_x = self.initial_x + self.square_size
         self.square_y = self.initial_y + self.square_size
         self.parts = dimension
         self.part = self.square_size//self.parts
         self.loadComponets()
         
-    
-    def updateText(self,):
-        font = pygame.font.Font('freesansbold.ttf', 32)
-        infos = f'Generation {self.generation}'
-        if self.best_solution: 
-            id_sol, fit_sol = self.best_solution.id, round(self.best_solution.fitness,2)
-            infos += f' -- Best Solution: ID({id_sol}), Fitness({fit_sol})'
-        text = font.render(infos, True, WHITE, BACKGROUND)
-        textRect = text.get_rect()
-        textRect.center = (self.WIDTH // 2, 25)
     
     def loadComponets(self,):
         self.img_wumpus = [

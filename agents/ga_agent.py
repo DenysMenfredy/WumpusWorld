@@ -28,7 +28,7 @@ class GaAgent(object):
             + (int(self.wumpus_died)    * 300) 
             + (int(self.agent_died)     * -10)
             + (int(self.escaped)        * 500) 
-            + (self.size                * -1.3)
+            + (self.size                * -1.5)
             + (self.errors              * -2)
             #+ (self.hits                * 1.5)
             - ((abs(x)+ abs(y))         * 5)
