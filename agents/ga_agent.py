@@ -2,7 +2,7 @@ from random import randrange, choice
 from game.action import Action, table_of_actions
 class GaAgent(object):
     size_limit = 100
-
+    fitness_function = lambda a, b, c, d, e, f, g: a * b * c**2 - 100000
     def __init__(self, generation, count, chromosome = None):
         self.chromosome = chromosome if chromosome else self.randomChromosome()
         self.id = f'{generation}.{count}'
@@ -23,15 +23,16 @@ class GaAgent(object):
     @property
     def fitness(self, ):
         x,y = self.coordinate
-        return  (
-              (int(self.got_gold)       * 250) 
-            + (int(self.wumpus_died)    * 300) 
-            + (int(self.agent_died)     * -10)
-            + (int(self.escaped)        * 500) 
-            + (self.size                * -1.5)
-            + (self.errors              * -2)
+        distance = abs(x) + abs(y)
+        return GaAgent.fitness_function (
+              int(self.got_gold)       # 150) 
+            , int(self.wumpus_died)    #* 350) 
+            , int(self.escaped)        #* 500) 
+            , int(self.agent_died)     #* -20)
+            , (self.size)                #* -1.5)
+            , (self.errors)              #* -2)
             #+ (self.hits                * 1.5)
-            - ((abs(x)+ abs(y))         * 5)
+            , (distance)        #* 10)
         )
 
     def randomChromosome(self,):
@@ -85,6 +86,6 @@ class GaAgent(object):
 
     def escape(self,):
         self.escaped = True
-
+    
     def __repr__(self,) ->str :
         return f'<\n\tFitness: {self.fitness}\n\tErrors: {self.errors}\n\tHits:{self.hits}\n\tChromosome: {self.chromosome}\n>'

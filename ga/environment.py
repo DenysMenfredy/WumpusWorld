@@ -1,30 +1,33 @@
 from random import sample, randrange, random
 
-from agents.ga_agent import GaAgent
-
 
 class Environment:
-    def __init__(self, evaluator, ):
-        self.stop_generation:int = 70
-        self.best_individual:GaAgent = None
-        self.size_pop:int = 150
-        self.crossover_rate: float = 0.9
-        self.mutation_rate: float = 0.05
-        self.evaluator = evaluator
+    def __init__(self, size_fixed, Agent, **params):
+        self.stop_generation:int = params["stop_gen"]
+        self.best_individual = None
+        self.size_pop:int = params["size_pop"]
+        self.crossover_rate: float = params["crossover_rate"]
+        self.mutation_rate: float = params["mutation_rate"]
+        self.evaluator = params["evaluator"]
+        self.Agent = Agent
+        self.Agent.size_limit = params["size_chromosome"]
+        self.Agent.fitness_function = params["fitness_function"]
+        self.size_fixed = size_fixed
         
-    def start(self, )->GaAgent:
+        
+    def start(self, ):
         population:list = self.generateInitialPop()
         self.evaluate(population)
         for generation in range( 1, self.stop_generation ):
             population = self.reproduce(population, generation)
-            self.findBest(population)
             self.evaluate(population, generation, self.best_individual)
+            self.findBest(population)
         self.evaluate([self.best_individual], generation = "x")
 
         return self.best_individual
     
     def generateInitialPop(self, )->list:
-        temp_population = [GaAgent(generation=0, count=i) for i in range(self.size_pop) ]
+        temp_population = [self.Agent(generation=0, count=i) for i in range(self.size_pop) ]
         return temp_population
 
     def evaluate(self, population, generation=0, best_individual=None):
@@ -60,16 +63,16 @@ class Environment:
         while mating_pool:
             indv = mating_pool.pop(randrange(size))
             indv2 = mating_pool.pop(randrange(size - 1))
-            chrm1, chrm2 = self.doublePointCrossover(indv.chromosome,indv2.chromosome)
-            new_pop.append(GaAgent(chromosome=chrm1, generation=generation,count=indv_count))
-            new_pop.append(GaAgent(chromosome=chrm2, generation=generation,count=indv_count+1))
+            chrm1, chrm2 = self.onePointCrossover(indv.chromosome,indv2.chromosome)
+            new_pop.append(self.Agent(chromosome=chrm1, generation=generation,count=indv_count))
+            new_pop.append(self.Agent(chromosome=chrm2, generation=generation,count=indv_count+1))
             indv_count += 2
             size -= 2
         return new_pop
     
     def onePointCrossover(self, seq1:str, seq2:str)->tuple:
         p_seq1 = randrange(len(seq1))
-        p_seq2 = randrange(len(seq2))
+        p_seq2 = randrange(len(seq2)) if not self.size_fixed else p_seq1
         
         seq12 = seq1[:p_seq1] + seq2[p_seq2:]
         seq21 = seq2[:p_seq2] + seq1[p_seq1:]
@@ -90,9 +93,10 @@ class Environment:
             mutate = random() < self.mutation_rate
             
             if mutate:
-                size = len(indiv.chromosome)
-                n1, n2 = randrange(size), randrange(size)
-                indiv.chromosome = indiv.chromosome[:n1] + indiv.chromosome[n2] + indiv.chromosome[n1+1:n2] + indiv.chromosome[n1] + indiv.chromosome[n2+1: ]
+                indiv.chromosome = indiv.randomChromosome()
+                #size = len(indiv.chromosome)
+                #n1, n2 = randrange(size), randrange(size)
+                #indiv.chromosome = indiv.chromosome[:n1] + indiv.chromosome[n2] + indiv.chromosome[n1+1:n2] + indiv.chromosome[n1] + indiv.chromosome[n2+1: ]
 
     def findBest(self, population:list):
         best = sorted(population, key=lambda indv: indv.fitness)[-1]

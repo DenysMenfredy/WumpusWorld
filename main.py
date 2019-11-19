@@ -1,17 +1,29 @@
 
-from game.environment import Environment as GameEnvironment
-from game.game import Game
 from ga.environment import Environment as GAEnvironment
+from ga.weights_evaluator import WeightEvaluator
+from agents.weights_optimize import WeightOptimize
 
 def main():
-    game_environment = GameEnvironment(dimension = 5, n_pits = 4)
-    game = Game(game_environment, gui_enabled=True)
-
-    ga = GAEnvironment(game)
     
+    
+     
+    params = {
+        "stop_gen": 20,
+        "size_pop": 50,
+        "crossover_rate": 0.9,
+        "mutation_rate": 0.05,
+        "evaluator": WeightEvaluator(),
+        "size_chromosome": 3,
+        "fitness_function": None
+    }
+
+    
+    ga = GAEnvironment(size_fixed = True, Agent = WeightOptimize,**params)
     solution = ga.start()
-    game_environment.printMatrix(solution.coordinate)
+    #game_environment.printMatrix(solution.coordinate)
     print(solution)
+
+
     
 if __name__ == '__main__':
     main()

@@ -55,7 +55,6 @@ class Game(object):
                         self.agents.remove(agent)
                         continue
                         #print('agent wins')
-                            
                 if agent_action.name == 'shoot':
                     if not agent.hasArrow():
                         #agent.errors += 0.1

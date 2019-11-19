@@ -29,8 +29,8 @@ class Environment(object):
             x,y = self.randomCoordinate()
             self.coordinate[obj["name"]].append((x,y))
             self.matrix[x][y] = obj['name']
-            print(x,y, end=' ')
-            print(obj['name'])
+            #print(x,y, end=' ')
+            #print(obj['name'])
 
             if obj['name'] == 'gold': self.matrix_perceptions[x][y].append(self.perceptions[obj['name']])
             else:
