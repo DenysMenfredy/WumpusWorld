@@ -5,11 +5,10 @@ from agents.weights_optimize import WeightOptimize
 
 def main():
     
-    
      
     params = {
         "stop_gen": 20,
-        "size_pop": 50,
+        "size_pop": 60,
         "crossover_rate": 0.9,
         "mutation_rate": 0.05,
         "evaluator": WeightEvaluator(),
@@ -17,12 +16,9 @@ def main():
         "fitness_function": None
     }
 
-    
     ga = GAEnvironment(size_fixed = True, Agent = WeightOptimize,**params)
     solution = ga.start()
-    #game_environment.printMatrix(solution.coordinate)
     print(solution)
-
 
     
 if __name__ == '__main__':
