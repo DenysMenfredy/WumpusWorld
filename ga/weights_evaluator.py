@@ -24,9 +24,9 @@ class WeightEvaluator(object):
         
         for agent in self.agents:
             
-            weight1, weight1, weight1 = agent.getWeights()
+            weight1, weight2, weight3 = agent.getWeights()
             params['fitness_function'] = lambda got_gold, wumpus_died, agent_died, \
-                                    escaped, errors, size, distance: got_gold * weight1 + wumpus_died * weight1 + escaped * weight1\
+                                    escaped, errors, size, distance: got_gold * weight1 + wumpus_died * weight2 + escaped * weight3\
                                                                         + agent_died * -20 + errors * -2 + size * -1.5 + distance * -5
            
             results = []
