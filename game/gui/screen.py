@@ -27,7 +27,7 @@ class Screen(object):
         self.agents = []
         self.generation = None
         self.clock = pygame.time.Clock()
-        self.fps = 120
+        self.fps = 240
 
     def show(self, dimension, generation, best_solution):
         pygame.init()

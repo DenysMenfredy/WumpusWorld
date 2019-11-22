@@ -102,6 +102,7 @@ class Environment(object):
                     else : output += '| '
             output += '|\n'
         print(output)
+        return output
           
     
     def getPerceptions(self, coordinate:tuple)->list:

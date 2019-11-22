@@ -2,10 +2,11 @@ from random import randrange, choice
 from game.action import Action, table_of_actions
 class GaAgent(object):
     size_limit = 100
-    fitness_function = lambda a, b, c, d, e, f, g: a * b * c**2 - 100000
+    fitness_function = lambda a, b, c, d, e, f, g,h: a * b * c**2 - 100000
     def __init__(self, generation, count, chromosome = None):
         self.chromosome = chromosome if chromosome else self.randomChromosome()
         self.id = f'{generation}.{count}'
+        self._fitness = 0
         self.initParams()
     
     def initParams(self,):
@@ -31,10 +32,13 @@ class GaAgent(object):
             , int(self.agent_died)     #* -20)
             , (self.size)                #* -1.5)
             , (self.errors)              #* -2)
-            #+ (self.hits                * 1.5)
+            , (self.hits)                #* 1.5)
             , (distance)        #* 10)
         )
-
+    @fitness.setter
+    def fitness(self, value):
+        self._fitness = value
+        
     def randomChromosome(self,):
         rand_size = randrange(3, self.size_limit)
         possible_actions = list(table_of_actions.keys())
@@ -87,5 +91,20 @@ class GaAgent(object):
     def escape(self,):
         self.escaped = True
     
+    def copy(self,):
+        generation, count = self.id.split('.')
+        agent_copy = GaAgent(generation, count, self.chromosome)
+        agent_copy.got_gold = self.got_gold
+        agent_copy.agent_died  =self.agent_died
+        agent_copy.wumpus_died = self.wumpus_died
+        agent_copy.escaped = self.escaped
+        agent_copy.erros = self.errors
+        agent_copy.size = self.size
+        agent_copy.hits = self.hits
+        agent_copy.arrow = self.arrow
+        agent_copy.coordinate = self.coordinate
+        agent_copy.fitness = self.fitness
+        return agent_copy
+    
     def __repr__(self,) ->str :
-        return f'<\n\tFitness: {self.fitness}\n\tErrors: {self.errors}\n\tHits:{self.hits}\n\tChromosome: {self.chromosome}\n>'
+        return f'<\n\tFitness: {self.fitness}\n\tErrors: {self.errors}\n\tHits:{self.hits}\n\tChromosome: {self.chromosome}\n>\n'

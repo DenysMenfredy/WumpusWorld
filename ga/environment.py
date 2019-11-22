@@ -18,6 +18,7 @@ class Environment:
     def start(self, ):
         population:list = self.generateInitialPop()
         self.evaluate(population)
+        self.findBest(population)
         for generation in range( 1, self.stop_generation ):
             population = self.reproduce(population, generation)
             self.evaluate(population, generation, self.best_individual)
@@ -102,11 +103,10 @@ class Environment:
         best = sorted(population, key=lambda indv: indv.fitness)[-1]
 
         if not self.best_individual:
-            self.best_individual = best
+            self.best_individual = best.copy()
             return
         if best.fitness > self.best_individual.fitness:
-            self.best_individual = best
-
+            self.best_individual = best.copy()
             
        
 

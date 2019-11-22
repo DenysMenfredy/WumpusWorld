@@ -21,6 +21,6 @@ class WeightOptimize:
         return (self.chromosome[0], self.chromosome[1], self.chromosome[2])
     
     def __repr__(self,):
-        return f'Chromosome: {self.chromosome}\nFitness: {self.fitness}'
+        return f'\nChromosome: {self.chromosome}\nFitness: {self.fitness}'
     
     __str__ = __repr__
