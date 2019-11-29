@@ -32,7 +32,7 @@ class GaAgent(object):
             , int(self.agent_died)     #* -20)
             , (self.size)                #* -1.5)
             , (self.errors)              #* -2)
-            , (self.hits)                #* 1.5)
+            ,(self.hits)                #* 1.5)
             , (distance)        #* 10)
         )
     @fitness.setter
@@ -53,6 +53,9 @@ class GaAgent(object):
 
     def killedWumpus(self,)->bool:
         return self.wumpus_died
+    
+    def wonGame(self,)->bool:
+        return self.escaped
     
     def killWumpus(self,):
         self.wumpus_died = True

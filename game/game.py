@@ -64,10 +64,12 @@ class Game(object):
                     #print('agent shooted: ' + agent_action.direction)
                     if self.environment.isWumpus(targetCoordinate) and not agent.killedWumpus():
                         agent.killWumpus()
+                        agent.hits += 1
                         #print('agent killed wumpus')
                 if agent_action.name == 'pickup':
                     if not agent.hasGold() and self.environment.isGold(agent.coordinate):
                         agent.pickUp()
+                        agent.hits += 1
                     else :
                         #agent.errors += 0.1
                         pass

@@ -37,7 +37,7 @@ class Environment:
 
     def reproduce(self, population:list , generation:int)->list:
         mating_pool:list = self.selection(population)
-        new_pop:list = self.crossover(mating_pool,generation)
+        new_pop:list = self.crossover(mating_pool, generation)
         self.mutate(new_pop)
         population.sort(key=lambda indv: indv.fitness)
         percent = int(self.size_pop * self.crossover_rate )
@@ -64,7 +64,7 @@ class Environment:
         while mating_pool:
             indv = mating_pool.pop(randrange(size))
             indv2 = mating_pool.pop(randrange(size - 1))
-            chrm1, chrm2 = self.onePointCrossover(indv.chromosome,indv2.chromosome)
+            chrm1, chrm2 = self.doublePointCrossover(indv.chromosome,indv2.chromosome)
             new_pop.append(self.Agent(chromosome=chrm1, generation=generation,count=indv_count))
             new_pop.append(self.Agent(chromosome=chrm2, generation=generation,count=indv_count+1))
             indv_count += 2

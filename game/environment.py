@@ -21,7 +21,7 @@ class Environment(object):
         self.generate({'name': 'gold','amount':n_golds})
         self.generate({'name': 'wumpus','amount':n_wumpus})
         self.screamTrigger = False
-       
+        self.n_pits = n_pits
 
 
     def generate(self, obj: dict) -> None:
