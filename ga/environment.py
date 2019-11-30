@@ -9,21 +9,30 @@ class Environment:
         self.crossover_rate: float = params["crossover_rate"]
         self.mutation_rate: float = params["mutation_rate"]
         self.evaluator = params["evaluator"]
+        self.amount = params["cooperators"]
         self.Agent = Agent
         self.Agent.size_limit = params["size_chromosome"]
         self.Agent.fitness_function = params["fitness_function"]
         self.size_fixed = size_fixed
         
         
-    def start(self, ):
-        population:list = self.generateInitialPop()
-        self.evaluate(population)
-        self.findBest(population)
+        
+    def start(self,):
+        populations:list = [{"population":self.generateInitialPop(),"best_individual": None} for _ in range(self.amount)]
+        for pop in populations:
+            self.evaluate(pop["population"])
+            self.findBest(pop)
+    
         for generation in range( 1, self.stop_generation ):
-            population = self.reproduce(population, generation)
-            self.evaluate(population, generation, self.best_individual)
-            self.findBest(population)
-        self.evaluate([self.best_individual], generation = "x")
+            #print(populations[0]["population"][-1])
+            self.shareKnowledge(populations)
+            #print(populations[0]["population"][-1])
+            #quit()
+            populations = [{"population": self.reproduce(pop["population"], generation), "best_individual": pop["best_individual"]} for pop in populations]
+            for pop in populations:
+                self.evaluate(pop["population"], generation, pop["best_individual"])
+                self.findBest(pop)
+        self.evaluate([pop["best_individual"] for pop in populations], generation = "x")
 
         return self.best_individual
     
@@ -61,6 +70,17 @@ class Environment:
         size = len(mating_pool)
         new_pop = []
         indv_count = 0
+        
+        #percent = int(self.size_pop * self.crossover_rate )
+        #percent = percent if percent%2 == 0 else percent + 1
+        #for _ in range(percent):
+        #    indv = mating_pool[randrange(size)]
+        #    indv2 = mating_pool[randrange(size)]
+        #    chrm1, chrm2 = self.doublePointCrossover(indv.chromosome,indv2.chromosome)
+        #    new_pop.append(self.Agent(chromosome=chrm1, generation=generation,count=indv_count))
+        #    new_pop.append(self.Agent(chromosome=chrm2, generation=generation,count=indv_count+1))
+        #    indv_count += 2
+        
         while mating_pool:
             indv = mating_pool.pop(randrange(size))
             indv2 = mating_pool.pop(randrange(size - 1))
@@ -99,14 +119,27 @@ class Environment:
                 #n1, n2 = randrange(size), randrange(size)
                 #indiv.chromosome = indiv.chromosome[:n1] + indiv.chromosome[n2] + indiv.chromosome[n1+1:n2] + indiv.chromosome[n1] + indiv.chromosome[n2+1: ]
 
-    def findBest(self, population:list):
-        best = sorted(population, key=lambda indv: indv.fitness)[-1]
+    def findBest(self, population:dict):
+        population["population"].sort(key=lambda indv: indv.fitness)
+        best = population["population"][-1]
 
+        if not population["best_individual"]:
+            population["best_individual"] = best.copy()
+    
+        if best.fitness > population["best_individual"].fitness:
+            population["best_individual"] = best.copy()
+        
         if not self.best_individual:
             self.best_individual = best.copy()
             return
         if best.fitness > self.best_individual.fitness:
             self.best_individual = best.copy()
             
-       
+    def shareKnowledge(self, populations:list):
+        for pop in populations:
+            for neighbor in populations:
+                if pop == neighbor: continue
+                pop["population"].append(neighbor["best_individual"])
+                pop["population"].pop(0)
+                
 

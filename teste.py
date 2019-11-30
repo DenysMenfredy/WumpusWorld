@@ -10,3 +10,15 @@
 #     print(line)
     
 # print(      [i**2 for i in range(3)]        )
+
+a = {
+    "c": None,
+    "d": [1, 2, 3]
+}
+
+b = {
+    "c": None,
+    "d": [1, 2, 3]
+}
+
+print(a == b)

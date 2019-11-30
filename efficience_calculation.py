@@ -16,16 +16,17 @@ class EfficienceCalculation(object):
     def loadEnvironment(self, dimension, n_pits):
         self.environment = GameEnvironment(dimension = dimension, n_pits = n_pits)
         
-    def loadWeights(self, weights:list):
+    def loadWeights(self,size_chrm ,weights:list):
         self.weights = weights
         w1, w2, w3, w4, w5, w6, w7, w8 = self.weights
         self.ag_params = {
-            "stop_gen": 100,
+            "stop_gen": 200,
             "size_pop": 100,
-            "crossover_rate": 0.85,
+            "crossover_rate": 0.9,
             "mutation_rate": 0.05,
             "evaluator": None,
-            "size_chromosome": 100,
+            "cooperators": 3,
+            "size_chromosome": size_chrm,
             "fitness_function": lambda got_gold, wumpus_died, escaped, \
                                 agent_died, size, hits, errors, distance: got_gold * w1 + wumpus_died * w2 + escaped * w3\
                                                                     + agent_died * w4 + size * w5 + hits * w6 + errors * w7 + distance * w8
@@ -38,7 +39,7 @@ class EfficienceCalculation(object):
         victories, took_gold, killed_wumpus = 0, 0, 0
         all_fitness = []
         for i in range(iterations):
-            print(f'Running loop {i}')
+            print(f'Running loop {i+1}')
             ga = GAEnvironment(size_fixed = False, Agent = GaAgent, **self.ag_params)
             solution = ga.start()
             if solution.wonGame():
