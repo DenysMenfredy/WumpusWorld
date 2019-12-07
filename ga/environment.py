@@ -1,4 +1,6 @@
 from random import sample, randrange, random
+import numpy as np 
+import matplotlib.pyplot as plt
 
 
 class Environment:
@@ -14,14 +16,16 @@ class Environment:
         self.Agent.size_limit = params["size_chromosome"]
         self.Agent.fitness_function = params["fitness_function"]
         self.size_fixed = size_fixed
+        self.graphs_enableds = True  
         
         
         
     def start(self,):
         populations:list = [{"population":self.generateInitialPop(),"best_individual": None} for _ in range(self.amount)]
-        for pop in populations:
+        for i,pop in enumerate(populations):
             self.evaluate(pop["population"])
             self.findBest(pop)
+            if self.graphs_enableds: self.saveFitness(pop["population"], i)
     
         for generation in range( 1, self.stop_generation ):
             #print(populations[0]["population"][-1])
@@ -29,11 +33,15 @@ class Environment:
             #print(populations[0]["population"][-1])
             #quit()
             populations = [{"population": self.reproduce(pop["population"], generation), "best_individual": pop["best_individual"]} for pop in populations]
-            for pop in populations:
+            for i,pop in enumerate(populations):
                 self.evaluate(pop["population"], generation, pop["best_individual"])
                 self.findBest(pop)
+                if self.graphs_enableds: self.saveFitness(pop["population"],i)
         self.evaluate([pop["best_individual"] for pop in populations], generation = "x")
-
+        if self.graphs_enableds: 
+            self.showGraph()
+            self.resetData()
+        
         return self.best_individual
     
     def generateInitialPop(self, )->list:
@@ -139,7 +147,42 @@ class Environment:
         for pop in populations:
             for neighbor in populations:
                 if pop == neighbor: continue
-                pop["population"].append(neighbor["best_individual"])
+                pop["population"].append(neighbor["best_individual"].copy())
                 pop["population"].pop(0)
+    
+    def saveFitness(self, population: list, iD):
+            all_fitness = np.array([ind.fitness for ind in population])
+            with open(f'pop_{iD}.npy',"ab") as file:
+                np.save(file,all_fitness,)
+    
+    def showGraph(self, ):
+        x = np.arange(self.stop_generation + 1)
+        
+        for i in range(self.amount):
+            average = np.ndarray((1))
+            bests = np.ndarray((1))
+            worst = np.ndarray((1))
+            
+            with open(f'pop_{i}.npy',"rb") as file:
+                for j in range(self.stop_generation):
+                    all_fitness = np.load(file)
+                    # if j == 100: 
+                    #     print(all_fitness)
+                    #     quit()
+                    average = np.append(average,all_fitness.mean())
+                    bests = np.append(bests, max(all_fitness))
+                    worst = np.append(worst, min(all_fitness))
+            labels = ["maximo", "media", "minimo"]
+            data = [average, bests, worst]
+            for l,y in zip(labels, data):
+                plt.plot(x,y,label = l)
+                plt.legend(loc = "best")
+                plt.grid(True)
+
+            plt.show()
+    
+    def resetData(self, ):
+        for iD in range(self.amount):
+            open(f'pop_{iD}.npy',"wb").close()
                 
 
