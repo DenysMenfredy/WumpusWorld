@@ -21,26 +21,27 @@ class EfficienceCalculation(object):
         self.weights = weights
         w1, w2, w3, w4, w5, w6, w7, w8 = self.weights
         self.ag_params = {
-            "stop_gen": 100,
+            "stop_gen": 50,
             "size_pop": 100,
             "crossover_rate": 0.9,
             "mutation_rate": 0.02,
             "evaluator": None,
-            "cooperators": 1,
+            "cooperators": 2,
             "size_chromosome": size_chrm,
             "fitness_function": lambda got_gold, wumpus_died, escaped, \
                                 agent_died, size, hits, errors, distance: got_gold * w1 + wumpus_died * w2 + escaped * w3\
                                                                     + agent_died * w4 + size * w5 + hits * w6 + errors * w7 + distance * w8
         }
         
-    def runIterations(self, iterations):
-        for i in range(iterations):
+    def runIterations(self, iterations, environments):
+        for i in range(environments):
             print(f'Running loop {i+1}')
             self.loadEnvironment(self.environment.dimension, self.environment.n_pits)
             self.runIteration(iterations)
        
     def runIteration(self, iterations):
         self.ag_params["evaluator"] = Game(self.environment, gui_enabled=False)
+        # self.ag_params["evaluator"] = Game(self.environment, gui_enabled=True)
         self.iterations = iterations
         victories, took_gold, killed_wumpus = 0, 0, 0
         all_fitness = []
@@ -80,9 +81,10 @@ class EfficienceCalculation(object):
     
     def getPercents(self,):
         wins,wumpus,gold = array(self.percent_victories), array(self.percent_killed_wumpus), array(self.percent_took_gold)
-        return f'Iterations: {self.iterations}\nPercent Victories: {wins}% avg: {wins.mean()} std: {wins.std()}\
-                \nPercent Killed Wumpus: {wumpus}% avg: {wumpus.mean()} std: {wumpus.std()}\
-                \nPercent took Gold: {gold}% avg: {gold.mean()} std: {gold.std()}\n'
+        return f'Iterations: {self.iterations}\
+            \nPercent Victories:     | {wins} | avg: {wins.mean()} | std: {wins.std()} |\
+            \nPercent Killed Wumpus: | {wumpus} | avg: {wumpus.mean()} | std: {wumpus.std()} |\
+            \nPercent took Gold:     | {gold} | avg: {gold.mean()} | std: {gold.std()} |\n'
     
     def getResults(self,):
         return f'Configuration {self.set}:\n{self.getAgParams()}\

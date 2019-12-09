@@ -24,7 +24,7 @@ class GaAgent(object):
     @property
     def fitness(self, ):
         x,y = self.coordinate
-        distance = (x**2 + y**2) ** 0.5
+        distance = abs(x)+abs(y)
         return GaAgent.fitness_function (
               int(self.got_gold)       # 150) 
             , int(self.wumpus_died)    #* 350) 

@@ -1,7 +1,7 @@
 from random import sample, randrange, random
 import numpy as np 
 import matplotlib.pyplot as plt
-
+a = 1
 
 class Environment:
     def __init__(self, size_fixed, Agent, **params):
@@ -21,27 +21,24 @@ class Environment:
         
         
     def start(self,):
+        self.resetData()
         populations:list = [{"population":self.generateInitialPop(),"best_individual": None} for _ in range(self.amount)]
         for i,pop in enumerate(populations):
             self.evaluate(pop["population"])
             self.findBest(pop)
             if self.graphs_enableds: self.saveFitness(pop["population"], i)
     
-        for generation in range( 1, self.stop_generation ):
-            #print(populations[0]["population"][-1])
+        for generation in range(1, self.stop_generation ):
             self.shareKnowledge(populations)
-            #print(populations[0]["population"][-1])
-            #quit()
             populations = [{"population": self.reproduce(pop["population"], generation), "best_individual": pop["best_individual"]} for pop in populations]
             for i,pop in enumerate(populations):
                 self.evaluate(pop["population"], generation, pop["best_individual"])
                 self.findBest(pop)
                 if self.graphs_enableds: self.saveFitness(pop["population"],i)
         self.evaluate([pop["best_individual"] for pop in populations], generation = "x")
-        if self.graphs_enableds: 
-            self.showGraph()
-            self.resetData()
-        
+        if self.graphs_enableds: self.showGraph()
+        self.resetData()
+
         return self.best_individual
     
     def generateInitialPop(self, )->list:
@@ -59,6 +56,7 @@ class Environment:
         population.sort(key=lambda indv: indv.fitness)
         percent = int(self.size_pop * self.crossover_rate )
         percent = percent if percent%2 == 0 else percent + 1
+
         return new_pop + population[percent: ]
 
     def selection(self, population:list)->list:
@@ -79,24 +77,24 @@ class Environment:
         new_pop = []
         indv_count = 0
         
-        #percent = int(self.size_pop * self.crossover_rate )
-        #percent = percent if percent%2 == 0 else percent + 1
-        #for _ in range(percent):
-        #    indv = mating_pool[randrange(size)]
-        #    indv2 = mating_pool[randrange(size)]
-        #    chrm1, chrm2 = self.doublePointCrossover(indv.chromosome,indv2.chromosome)
-        #    new_pop.append(self.Agent(chromosome=chrm1, generation=generation,count=indv_count))
-        #    new_pop.append(self.Agent(chromosome=chrm2, generation=generation,count=indv_count+1))
-        #    indv_count += 2
+        percent = int(self.size_pop * self.crossover_rate )
+        percent = percent if percent%2 == 0 else percent + 1
+        for _ in range(0,percent,2):
+           indv = mating_pool[randrange(size)]
+           indv2 = mating_pool[randrange(size)]
+           chrm1, chrm2 = self.doublePointCrossover(indv.chromosome,indv2.chromosome)
+           new_pop.append(self.Agent(chromosome=chrm1, generation=generation,count=indv_count))
+           new_pop.append(self.Agent(chromosome=chrm2, generation=generation,count=indv_count+1))
+           indv_count += 2
         
-        while mating_pool:
-            indv = mating_pool.pop(randrange(size))
-            indv2 = mating_pool.pop(randrange(size - 1))
-            chrm1, chrm2 = self.doublePointCrossover(indv.chromosome,indv2.chromosome)
-            new_pop.append(self.Agent(chromosome=chrm1, generation=generation,count=indv_count))
-            new_pop.append(self.Agent(chromosome=chrm2, generation=generation,count=indv_count+1))
-            indv_count += 2
-            size -= 2
+        # while mating_pool:
+        #     indv = mating_pool.pop(randrange(size))
+        #     indv2 = mating_pool.pop(randrange(size - 1))
+        #     chrm1, chrm2 = self.doublePointCrossover(indv.chromosome,indv2.chromosome)
+        #     new_pop.append(self.Agent(chromosome=chrm1, generation=generation,count=indv_count))
+        #     new_pop.append(self.Agent(chromosome=chrm2, generation=generation,count=indv_count+1))
+        #     indv_count += 2
+        #     size -= 2
         return new_pop
     
     def onePointCrossover(self, seq1:str, seq2:str)->tuple:
@@ -139,47 +137,45 @@ class Environment:
         
         if not self.best_individual:
             self.best_individual = best.copy()
-            return
+            
         if best.fitness > self.best_individual.fitness:
             self.best_individual = best.copy()
             
-    def shareKnowledge(self, populations:list):
+    def shareKnowledge(self, populations:dict):
         for pop in populations:
             for neighbor in populations:
-                if pop == neighbor: continue
-                pop["population"].append(neighbor["best_individual"].copy())
-                pop["population"].pop(0)
+                if pop != neighbor:
+                    pop["population"].append(neighbor["best_individual"].copy())
+                    pop["population"].pop(0)
     
     def saveFitness(self, population: list, iD):
-            all_fitness = np.array([ind.fitness for ind in population])
-            with open(f'pop_{iD}.npy',"ab") as file:
-                np.save(file,all_fitness,)
+        all_fitness = np.array([ind.fitness for ind in population])
+        with open(f'pop_{iD}.npy',"ab") as file:
+            np.save(file,all_fitness)
     
     def showGraph(self, ):
-        x = np.arange(self.stop_generation + 1)
+        x = np.arange(self.stop_generation)
         
         for i in range(self.amount):
-            average = np.ndarray((1))
-            bests = np.ndarray((1))
-            worst = np.ndarray((1))
-            
+            average = np.ndarray((0))
+            bests = np.ndarray((0))
+            worst = np.ndarray((0))
             with open(f'pop_{i}.npy',"rb") as file:
                 for j in range(self.stop_generation):
                     all_fitness = np.load(file)
-                    # if j == 100: 
-                    #     print(all_fitness)
-                    #     quit()
                     average = np.append(average,all_fitness.mean())
                     bests = np.append(bests, max(all_fitness))
                     worst = np.append(worst, min(all_fitness))
-            labels = ["maximo", "media", "minimo"]
+            labels = ["average", "best", "worst"]
             data = [average, bests, worst]
+            plt.subplot(self.amount,1,i+1)
             for l,y in zip(labels, data):
                 plt.plot(x,y,label = l)
-                plt.legend(loc = "best")
-                plt.grid(True)
-
-            plt.show()
+            plt.title(f'pop_{i}')
+            plt.legend(loc = "best")
+            plt.grid(True)
+        plt.tight_layout()
+        plt.show()
     
     def resetData(self, ):
         for iD in range(self.amount):
