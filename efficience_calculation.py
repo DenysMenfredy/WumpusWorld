@@ -21,12 +21,12 @@ class EfficienceCalculation(object):
         self.weights = weights
         w1, w2, w3, w4, w5, w6, w7, w8 = self.weights
         self.ag_params = {
-            "stop_gen": 50,
+            "stop_gen": 100,
             "size_pop": 100,
             "crossover_rate": 0.9,
             "mutation_rate": 0.02,
             "evaluator": None,
-            "cooperators": 2,
+            "cooperators": 3,
             "size_chromosome": size_chrm,
             "fitness_function": lambda got_gold, wumpus_died, escaped, \
                                 agent_died, size, hits, errors, distance: got_gold * w1 + wumpus_died * w2 + escaped * w3\
