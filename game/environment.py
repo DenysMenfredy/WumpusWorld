@@ -8,20 +8,24 @@ class Environment(object):
             "gold": "glitter",
             "wumpus": "stench",
         }
-        self.matrix = [['empty' for column in range(dimension)] for line in range(dimension)]
-        self.matrix[0][0] = 'start'
-        self.matrix_perceptions = [[ [] for column in range(dimension)] for line in range(dimension)]
+        
         self.dimension = dimension
         self.coordinate = {
             "pit":[],
             "wumpus":[],
             "gold":[]
         }
-        self.generate({'name': 'pit','amount':n_pits})
-        self.generate({'name': 'gold','amount':n_golds})
-        self.generate({'name': 'wumpus','amount':n_wumpus})
-        self.screamTrigger = False
-        self.n_pits = n_pits
+        valid_environment = False
+        while(not valid_environment):
+            self.matrix = [['empty' for column in range(dimension)] for line in range(dimension)]
+            self.matrix[0][0] = 'start'
+            self.matrix_perceptions = [[ [] for column in range(dimension)] for line in range(dimension)]
+            self.generate({'name': 'pit','amount':n_pits})
+            self.generate({'name': 'gold','amount':n_golds})
+            self.generate({'name': 'wumpus','amount':n_wumpus})
+            self.screamTrigger = False
+            self.n_pits = n_pits
+            valid_environment = self.validEnvironment()
 
 
     def generate(self, obj: dict) -> None:
@@ -168,3 +172,65 @@ class Environment(object):
         return True
     
     def getObjectCoord(self, name: str): return self.coordinate[name]
+    
+    def getGraph(self, )->dict:
+        grafo = {}
+        n = self.dimension
+
+        for i in range(n):
+            for j in range(n):
+                cima, baixo, direita, esquerda = (i+1,j), (i-1,j), (i,j+1), (i,j-1)
+                nodes = []
+                if i == 0:
+                    if self.matrix[cima[0]][cima[1]] != 'pit': nodes.append(cima)
+                    if j == 0:
+                        if self.matrix[direita[0]][direita[1]] != 'pit': nodes.append(direita)
+                    elif j == n-1:
+                        if self.matrix[esquerda[0]][esquerda[1]] != 'pit': nodes.append(esquerda)
+                    else:
+                        if self.matrix[direita[0]][direita[1]] != 'pit': nodes.append(direita)
+                        if self.matrix[esquerda[0]][esquerda[1]] != 'pit': nodes.append(esquerda)
+
+                elif i == n-1:
+                    if self.matrix[baixo[0]][baixo[1]] != 'pit': nodes.append(baixo)
+                    if j == 0:
+                        if self.matrix[direita[0]][direita[1]] != 'pit': nodes.append(direita)
+                    elif j == n-1:
+                        if self.matrix[esquerda[0]][esquerda[1]] != 'pit': nodes.append(esquerda)
+                    else:
+                        if self.matrix[direita[0]][direita[1]] != 'pit': nodes.append(direita)
+                        if self.matrix[esquerda[0]][esquerda[1]] != 'pit': nodes.append(esquerda)
+                        
+                else:
+                    if self.matrix[baixo[0]][baixo[1]] != 'pit': nodes.append(baixo)
+                    if self.matrix[cima[0]][cima[1]] != 'pit': nodes.append(cima)
+                    if j == 0:
+                        if self.matrix[direita[0]][direita[1]] != 'pit': nodes.append(direita)
+                    elif j == n-1:
+                        if self.matrix[esquerda[0]][esquerda[1]] != 'pit': nodes.append(esquerda)
+                    else:
+                        if self.matrix[direita[0]][direita[1]] != 'pit': nodes.append(direita)
+                        if self.matrix[esquerda[0]][esquerda[1]] != 'pit': nodes.append(esquerda)
+                grafo.update({(i,j):nodes})
+                
+        return grafo
+    
+    def printGraph(self, ):
+        for k, v in self.getGraph().items():
+            print(f'{k}:{v}')
+    
+    
+                
+    def depthSearch(self, start:object)-> bool:
+        visiteds = []
+        def targetIsNext(current:object):
+            for vertex in self.getGraph()[current]:
+                if vertex not in visiteds:
+                    visiteds.append(vertex)
+                    x, y = vertex
+                    if self.matrix[x][y] == 'gold': return True
+                    if targetIsNext(vertex): return True
+        return targetIsNext(start)
+    
+    def validEnvironment(self, )-> bool:
+        return self.depthSearch((0,0))
