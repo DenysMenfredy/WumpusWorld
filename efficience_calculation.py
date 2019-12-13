@@ -2,7 +2,9 @@ from game.environment import Environment as GameEnvironment
 from ga.environment import Environment as GAEnvironment
 from agents.ga_agent import GaAgent
 from game.game import Game
-from numpy import array
+from numpy import array, save, load
+from matplotlib import pyplot as plt
+from os import path
 #from matplotlib import pyplot as plt
 
 class EfficienceCalculation(object):
@@ -49,7 +51,7 @@ class EfficienceCalculation(object):
             #print(f'Running loop {i+1}')
             ga = GAEnvironment(size_fixed = False, Agent = GaAgent, **self.ag_params)
             solution = ga.start()
-            self.ag_params["evaluator"].environment.printMatrix(solution.coordinate)
+            #self.ag_params["evaluator"].environment.printMatrix(solution.coordinate)
             if solution.wonGame():
                 victories += 1
             if solution.hasGold():
@@ -91,19 +93,49 @@ class EfficienceCalculation(object):
              {self.getGameParams()}{self.getPercents()}'
               
     def exportResults(self, ):
-        with open(f'Config {self.set}.txt', "w+") as file:
-            file.write(self.getResults())
+        wins,wumpus,gold = array(self.percent_victories), array(self.percent_killed_wumpus), array(self.percent_took_gold)
+        dimension = self.environment.dimension
+        #average, standard = wins.mean(), wins.std()
+        values = array([wins.mean(), wumpus.mean(), gold.mean(), dimension])
+        with open(path.abspath(f'files/Config{self.set}.npy'), "ab+") as file:
+            save(file, values)
         
     
     def showResults(self, ):
         print(self.getResults())
         
-    # def showGraphics(self, image_title):
-    #     percents = ["Percent Victories", "Percent took gold", "Percent killed wumpus"]
-    #     percents_values = [self.percent_victories, self.percent_took_gold, self.percent_killed_wumpus]
-    #     xs = [i + 0.1 for i, _ in enumerate(percents)]
-    #     plt.bar(xs, percents_values)
-    #     plt.ylabel("# values in %")
-    #     plt.title("Percents")
-    #     plt.xticks([i + 0.1 for i, _ in enumerate(percents)], percents)
-    #     plt.savefig(f'{image_title}.png')
+    def showGraphics(self, ):
+        wins = []
+        kills = []
+        gold = []
+        xs = []
+        with open(path.abspath(f'files/Config{self.set}.npy'), "rb") as file:
+            eof = False
+            while(not eof):
+                try:
+                    values = load(file)
+                    wins.append(values[0])
+                    kills.append(values[1])
+                    gold.append(values[2])
+                    xs.append(values[3])
+                    
+                except ValueError:
+                    eof = True
+                    
+        labels = [f'{int(dim)}x{int(dim)}' for dim in sorted(xs)]
+        print(labels)
+        print(xs)
+        #data = [wins, kills, gold]
+        ax = plt.subplot(111)
+        width = 0.35
+        ax.bar(array(xs)-width, wins, width=width, label='wins')
+        ax.bar(xs, kills, width=width, label='kills')
+        ax.bar(array(xs)+width, gold, width=width, label='gold')
+        ax.set_title("TEST")
+        ax.legend(loc = "best")
+        ax.grid(True)
+        #ax.axes([4, max(xs)+1, 0, 100])
+        ax.set_xticks(sorted(xs))
+        ax.set_xticklabels(labels)
+        ax.autoscale(tight=True)
+        plt.show()

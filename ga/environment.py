@@ -1,7 +1,7 @@
 from random import sample, randrange, random
 import numpy as np 
 import matplotlib.pyplot as plt
-a = 1
+from os import path
 
 class Environment:
     def __init__(self, size_fixed, Agent, **params):
@@ -150,7 +150,7 @@ class Environment:
     
     def saveFitness(self, population: list, iD):
         all_fitness = np.array([ind.fitness for ind in population])
-        with open(f'pop_{iD}.npy',"ab") as file:
+        with open(f'/home/denysm7/I.C/wumpus/files/pop_{iD}.npy',"ab+") as file:
             np.save(file,all_fitness)
     
     def showGraph(self, ):
@@ -160,7 +160,7 @@ class Environment:
             average = np.ndarray((0))
             bests = np.ndarray((0))
             worst = np.ndarray((0))
-            with open(f'pop_{i}.npy',"rb") as file:
+            with open(path.abspath(f'files/pop_{i}.npy'),"rb") as file:
                 for j in range(self.stop_generation):
                     all_fitness = np.load(file)
                     average = np.append(average,all_fitness.mean())
@@ -179,6 +179,6 @@ class Environment:
     
     def resetData(self, ):
         for iD in range(self.amount):
-            open(f'pop_{iD}.npy',"wb").close()
+            open(path.abspath(f'files/pop_{iD}.npy'),"wb").close()
                 
 

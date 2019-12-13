@@ -1,7 +1,7 @@
 from efficience_calculation import EfficienceCalculation
 
 def main():
-    size = 5
+    size = 7
     #for perc in range(5,90,5):
     # perc = 50
     # print(f'{perc}%')
@@ -19,9 +19,9 @@ def main():
     efficience_calulation = EfficienceCalculation("teste-environment")
     efficience_calulation.loadEnvironment(size, size-1)
     efficience_calulation.loadWeights(4*(size**2) ,weights)
-    efficience_calulation.runIterations(1, 10)
-    #efficience_calulation.exportResults()
+    efficience_calulation.runIterations(1, 5)
+    efficience_calulation.exportResults()
     efficience_calulation.showResults()
-    #efficience_calulation.showGraphics("teste-iterations")
+    efficience_calulation.showGraphics()
 if __name__ == '__main__':
     main()
