@@ -51,7 +51,7 @@ class EfficienceCalculation(object):
             #print(f'Running loop {i+1}')
             ga = GAEnvironment(size_fixed = False, Agent = GaAgent, **self.ag_params)
             solution = ga.start()
-            #self.ag_params["evaluator"].environment.printMatrix(solution.coordinate)
+            self.ag_params["evaluator"].environment.printMatrix(solution.coordinate)
             if solution.wonGame():
                 victories += 1
             if solution.hasGold():
@@ -95,7 +95,6 @@ class EfficienceCalculation(object):
     def exportResults(self, ):
         wins,wumpus,gold = array(self.percent_victories), array(self.percent_killed_wumpus), array(self.percent_took_gold)
         dimension = self.environment.dimension
-        #average, standard = wins.mean(), wins.std()
         values = array([wins.mean(), wumpus.mean(), gold.mean(), dimension])
         with open(path.abspath(f'files/Config{self.set}.npy'), "ab+") as file:
             save(file, values)
@@ -125,7 +124,6 @@ class EfficienceCalculation(object):
         labels = [f'{int(dim)}x{int(dim)}' for dim in sorted(xs)]
         print(labels)
         print(xs)
-        #data = [wins, kills, gold]
         ax = plt.subplot(111)
         width = 0.35
         ax.bar(array(xs)-width, wins, width=width, label='wins')
@@ -134,7 +132,6 @@ class EfficienceCalculation(object):
         ax.set_title("TEST")
         ax.legend(loc = "best")
         ax.grid(True)
-        #ax.axes([4, max(xs)+1, 0, 100])
         ax.set_xticks(sorted(xs))
         ax.set_xticklabels(labels)
         ax.autoscale(tight=True)

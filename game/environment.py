@@ -221,16 +221,19 @@ class Environment(object):
     
     
                 
-    def depthSearch(self, start:object)-> bool:
-        visiteds = []
-        def targetIsNext(current:object):
-            for vertex in self.getGraph()[current]:
-                if vertex not in visiteds:
-                    visiteds.append(vertex)
-                    x, y = vertex
+    def depthSearch(self, start:object):
+        graph = self.getGraph()
+        visiteds = [start]
+        not_visiteds = [start]
+        while not_visiteds:
+            current = not_visiteds.pop()
+            for neighbor in graph[current]:
+                if neighbor not in visiteds:
+                    visiteds.append(neighbor)
+                    not_visiteds.append(neighbor)
+                    x,y=neighbor
                     if self.matrix[x][y] == 'gold': return True
-                    if targetIsNext(vertex): return True
-        return targetIsNext(start)
+        return False
     
     def validEnvironment(self, )-> bool:
         return self.depthSearch((0,0))

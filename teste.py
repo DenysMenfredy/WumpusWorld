@@ -36,25 +36,25 @@
 #     print(b)
 
 
-self.matrix = [
+matrix = [
     [
-        '00'  ,'pit','02'  ,'alvo',
+        '00'  ,'pit','02'  ,'target',
     ],
     [
         '10'  ,'11'  ,'pit','13'
     ],
     [
-        'pit','21'  ,'pit','23'
+        'pit','21'  ,'22','23'
     ],
     [
-        '30'  ,'31'  ,'30'  ,'33'
+        '30'  ,'31'  ,'pit'  ,'33'
     ],
     
 ]
 
 
-grafo = {}
-n = len(self.matrix)
+graph = {}
+n = len(matrix)
 
 
 for i in range(n):
@@ -62,53 +62,54 @@ for i in range(n):
         cima, baixo, direita, esquerda = (i+1,j), (i-1,j), (i,j+1), (i,j-1)
         nodes = []
         if i == 0:
-            if self.matrix[cima[0]][cima[1]] != 'pit': nodes.append(cima)
+            if matrix[cima[0]][cima[1]] != 'pit': nodes.append(cima)
             if j == 0:
-                if self.matrix[direita[0]][direita[1]] != 'pit': nodes.append(direita)
+                if matrix[direita[0]][direita[1]] != 'pit': nodes.append(direita)
             elif j == n-1:
-                if self.matrix[esquerda[0]][esquerda[1]] != 'pit': nodes.append(esquerda)
+                if matrix[esquerda[0]][esquerda[1]] != 'pit': nodes.append(esquerda)
             else:
-                if self.matrix[direita[0]][direita[1]] != 'pit': nodes.append(direita)
-                if self.matrix[esquerda[0]][esquerda[1]] != 'pit': nodes.append(esquerda)
+                if matrix[direita[0]][direita[1]] != 'pit': nodes.append(direita)
+                if matrix[esquerda[0]][esquerda[1]] != 'pit': nodes.append(esquerda)
 
         elif i == n-1:
-            if self.matrix[baixo[0]][baixo[1]] != 'pit': nodes.append(baixo)
+            if matrix[baixo[0]][baixo[1]] != 'pit': nodes.append(baixo)
             if j == 0:
-                if self.matrix[direita[0]][direita[1]] != 'pit': nodes.append(direita)
+                if matrix[direita[0]][direita[1]] != 'pit': nodes.append(direita)
             elif j == n-1:
-                if self.matrix[esquerda[0]][esquerda[1]] != 'pit': nodes.append(esquerda)
+                if matrix[esquerda[0]][esquerda[1]] != 'pit': nodes.append(esquerda)
             else:
-                if self.matrix[direita[0]][direita[1]] != 'pit': nodes.append(direita)
-                if self.matrix[esquerda[0]][esquerda[1]] != 'pit': nodes.append(esquerda)
+                if matrix[direita[0]][direita[1]] != 'pit': nodes.append(direita)
+                if matrix[esquerda[0]][esquerda[1]] != 'pit': nodes.append(esquerda)
                 
 
         else:
-            if self.matrix[baixo[0]][baixo[1]] != 'pit': nodes.append(baixo)
-            if self.matrix[cima[0]][cima[1]] != 'pit': nodes.append(cima)
+            if matrix[baixo[0]][baixo[1]] != 'pit': nodes.append(baixo)
+            if matrix[cima[0]][cima[1]] != 'pit': nodes.append(cima)
             if j == 0:
-                if self.matrix[direita[0]][direita[1]] != 'pit': nodes.append(direita)
+                if matrix[direita[0]][direita[1]] != 'pit': nodes.append(direita)
             elif j == n-1:
-                if self.matrix[esquerda[0]][esquerda[1]] != 'pit': nodes.append(esquerda)
+                if matrix[esquerda[0]][esquerda[1]] != 'pit': nodes.append(esquerda)
             else:
-                if self.matrix[direita[0]][direita[1]] != 'pit': nodes.append(direita)
-                if self.matrix[esquerda[0]][esquerda[1]] != 'pit': nodes.append(esquerda)
-        grafo.update({(i,j):nodes})
+                if matrix[direita[0]][direita[1]] != 'pit': nodes.append(direita)
+                if matrix[esquerda[0]][esquerda[1]] != 'pit': nodes.append(esquerda)
+        graph.update({(i,j):nodes})
 
 
-for k, v in grafo.items():
-    print(f'{k}:{v}')
+# for k, v in graph.items():
+#     print(f'{k}:{v}')
 
-def buscaEmProfundidade(grafo:dict, inicio:object, alvo:object, ambiente:list):
-    visitados = []
-    def alvoIsProximo(atual:object):
-        for vertice in grafo[atual]:
-            if vertice not in visitados:
-                visitados.append(vertice)
-                x,y=vertice
-                #if ambiente[x][y] == 'pit': continue
-                if ambiente[x][y] == alvo: return True
-                if alvoIsProximo(vertice): return True
-    return alvoIsProximo(inicio)
+def depthSearch(graph:dict, start:object, target:object, environment:list):
+    visiteds = [start]
+    not_visiteds = [start]
+    while not_visiteds:
+        current = not_visiteds.pop()
+        for neighbor in graph[current]:
+            if neighbor not in visiteds:
+                visiteds.append(neighbor)
+                not_visiteds.append(neighbor)
+                x,y=neighbor
+                if environment[x][y] == target: return True
+    return False
 
-achou = buscaEmProfundidade(grafo, (0,0),'alvo', self.matrix)
-print(achou)
+found = depthSearch(graph, (0,0),'target', matrix)
+print(found)
