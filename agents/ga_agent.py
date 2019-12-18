@@ -2,7 +2,7 @@ from random import randrange, choice
 from game.action import Action, table_of_actions
 class GaAgent(object):
     size_limit = 100
-    fitness_function = lambda a, b, c, d, e, f, g,h: a * b * c**2 - 100000
+    fitness_function = lambda a, b, c, d, e, f, g, h, i: a
     def __init__(self, generation, count, chromosome = None):
         self.chromosome = chromosome if chromosome else self.randomChromosome()
         self.id = f'{generation}.{count}'
@@ -20,20 +20,23 @@ class GaAgent(object):
         self.wumpus_died = False
         self.agent_died = False
         self.escaped = False
+        self.memory = set()
+        self.fadigue = 0
 
     @property
     def fitness(self, ):
         x,y = self.coordinate
         distance = abs(x)+abs(y)
         return GaAgent.fitness_function (
-              int(self.got_gold)       # 150) 
-            , int(self.wumpus_died)    #* 350) 
-            , int(self.escaped)        #* 500) 
-            , int(self.agent_died)     #* -20)
-            , (self.size)                #* -1.5)
-            , (self.errors)              #* -2)
-            ,(self.hits)                #* 1.5)
-            , (distance)        #* 10)
+              int(self.got_gold)
+            , int(self.wumpus_died)
+            , int(self.escaped)
+            , int(self.agent_died)
+            ,  self.size
+            ,  self.hits
+            ,  self.errors
+            ,  distance
+            ,  self.fadigue
         )
     @fitness.setter
     def fitness(self, value):
@@ -75,6 +78,9 @@ class GaAgent(object):
         elif direction == 'S': self.coordinate = (x-1,y)
         elif direction == 'L': self.coordinate = (x,y+1)
         elif direction == 'O': self.coordinate = (x,y-1)
+        if self.coordinate in self.memory: self.fadigue += 1
+        self.memory.add(self.coordinate)
+
 
     def shoot(self, ):
         self.arrow = False
@@ -107,7 +113,9 @@ class GaAgent(object):
         agent_copy.arrow = self.arrow
         agent_copy.coordinate = self.coordinate
         agent_copy.fitness = self.fitness
+        agent_copy.fadigue = self.fadigue
+        agent_copy.memory = self.memory.copy()
         return agent_copy
     
     def __repr__(self,) ->str :
-        return f'<\n\tFitness: {self.fitness}\n\tErrors: {self.errors}\n\tHits:{self.hits}\n\tChromosome: {self.chromosome}\n>\n'
+        return f'<\nFitness: {self.fitness}\nErrors: {self.errors}\nHits:{self.hits}\nChromosome: {self.chromosome}\n>\n'

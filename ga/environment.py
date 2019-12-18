@@ -120,10 +120,10 @@ class Environment:
             mutate = random() < self.mutation_rate
             
             if mutate:
-                indiv.chromosome = indiv.randomChromosome()
-                #size = len(indiv.chromosome)
-                #n1, n2 = randrange(size), randrange(size)
-                #indiv.chromosome = indiv.chromosome[:n1] + indiv.chromosome[n2] + indiv.chromosome[n1+1:n2] + indiv.chromosome[n1] + indiv.chromosome[n2+1: ]
+                # indiv.chromosome = indiv.randomChromosome()
+                size = len(indiv.chromosome)
+                n1, n2 = randrange(size), randrange(size)
+                indiv.chromosome = indiv.chromosome[:n1] + indiv.chromosome[n2] + indiv.chromosome[n1+1:n2] + indiv.chromosome[n1] + indiv.chromosome[n2+1: ]
 
     def findBest(self, population:dict):
         population["population"].sort(key=lambda indv: indv.fitness)
@@ -150,7 +150,7 @@ class Environment:
     
     def saveFitness(self, population: list, iD):
         all_fitness = np.array([ind.fitness for ind in population])
-        with open(f'/home/denysm7/I.C/wumpus/files/pop_{iD}.npy',"ab+") as file:
+        with open(path.abspath(f'files/pop_{iD}.npy'),"ab+") as file:
             np.save(file,all_fitness)
     
     def showGraph(self, ):

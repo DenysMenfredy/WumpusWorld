@@ -165,10 +165,8 @@ class Environment(object):
 
     def isValid(self, coordinate) -> bool:
         x , y = coordinate
-        if x >= self.dimension or y >= self.dimension:
-            return False
-        if x < 0 or y < 0:
-            return False
+        if x >= self.dimension or y >= self.dimension: return False
+        if x < 0 or y < 0: return False
         return True
     
     def getObjectCoord(self, name: str): return self.coordinate[name]
@@ -214,13 +212,7 @@ class Environment(object):
                 grafo.update({(i,j):nodes})
                 
         return grafo
-    
-    def printGraph(self, ):
-        for k, v in self.getGraph().items():
-            print(f'{k}:{v}')
-    
-    
-                
+              
     def depthSearch(self, start:object):
         graph = self.getGraph()
         visiteds = [start]

@@ -21,23 +21,23 @@ class EfficienceCalculation(object):
         #self.environment.printGraph()
     def loadWeights(self,size_chrm ,weights:list):
         self.weights = weights
-        w1, w2, w3, w4, w5, w6, w7, w8 = self.weights
+        w1, w2, w3, w4, w5, w6, w7, w8 ,w9 = self.weights
         self.ag_params = {
-            "stop_gen": 100,
+            "stop_gen": 200,
             "size_pop": 100,
             "crossover_rate": 0.9,
             "mutation_rate": 0.05,
             "evaluator": None,
-            "cooperators": 5,
+            "cooperators": 3,
             "size_chromosome": size_chrm,
             "fitness_function": lambda got_gold, wumpus_died, escaped, \
-                                agent_died, size, hits, errors, distance: got_gold * w1 + wumpus_died * w2 + escaped * w3\
-                                                                    + agent_died * w4 + size * w5 + hits * w6 + errors * w7 + distance * w8
+                                agent_died, size, hits, errors, distance, fatigue: got_gold * w1 + wumpus_died * w2 + escaped * w3\
+                                                                    + agent_died * w4 + size * w5 + hits * w6 + errors * w7 + distance * w8 + fatigue * w9
         }
         
     def runIterations(self, iterations, environments):
         for i in range(environments):
-            print(f'Running loop {i+1}')
+            print(f'Running environment {i+1}')
             self.loadEnvironment(self.environment.dimension, self.environment.n_pits)
             self.runIteration(iterations)
        
@@ -48,10 +48,11 @@ class EfficienceCalculation(object):
         victories, took_gold, killed_wumpus = 0, 0, 0
         all_fitness = []
         for i in range(iterations):
-            #print(f'Running loop {i+1}')
+            print(f'loop {i+1}')
             ga = GAEnvironment(size_fixed = False, Agent = GaAgent, **self.ag_params)
             solution = ga.start()
             self.ag_params["evaluator"].environment.printMatrix(solution.coordinate)
+            print(solution)
             if solution.wonGame():
                 victories += 1
             if solution.hasGold():
@@ -99,7 +100,9 @@ class EfficienceCalculation(object):
         with open(path.abspath(f'files/Config{self.set}.npy'), "ab+") as file:
             save(file, values)
         
-    
+    def clearData(self,):
+        open(path.abspath(f'files/Config{self.set}.npy'), "wb").close()
+        
     def showResults(self, ):
         print(self.getResults())
         
