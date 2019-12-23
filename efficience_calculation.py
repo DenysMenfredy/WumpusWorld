@@ -28,7 +28,7 @@ class EfficienceCalculation(object):
             "crossover_rate": 0.9,
             "mutation_rate": 0.05,
             "evaluator": None,
-            "cooperators": 3,
+            "cooperators": 1,
             "size_chromosome": size_chrm,
             "fitness_function": lambda got_gold, wumpus_died, escaped, \
                                 agent_died, size, hits, errors, distance, fatigue: got_gold * w1 + wumpus_died * w2 + escaped * w3\
@@ -51,8 +51,8 @@ class EfficienceCalculation(object):
             print(f'loop {i+1}')
             ga = GAEnvironment(size_fixed = False, Agent = GaAgent, **self.ag_params)
             solution = ga.start()
-            self.ag_params["evaluator"].environment.printMatrix(solution.coordinate)
-            print(solution)
+            #self.ag_params["evaluator"].environment.printMatrix(solution.coordinate)
+            #print(solution)
             if solution.wonGame():
                 victories += 1
             if solution.hasGold():
@@ -126,7 +126,9 @@ class EfficienceCalculation(object):
                     
         labels = [f'{int(dim)}x{int(dim)}' for dim in sorted(xs)]
         print(labels)
-        print(xs)
+        print(wins)
+        print(kills)
+        print(gold)
         ax = plt.subplot(111)
         width = 0.35
         ax.bar(array(xs)-width, wins, width=width, label='wins')

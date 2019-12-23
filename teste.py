@@ -34,6 +34,12 @@
 #     for _ in range(n):
 #         b = np.append(b, np.load(file))
 #     print(b)
-from math import ceil
-for i in range(4,100):
-    print(i,ceil((i*i-2)*0.1))
+a=            ['5x5', '10x10', '25x25', '50x50', ]
+wins =        [70.0,   34.6,       18.8,    5,6,  ]
+wumpus =      [69.8,   36.6,        4.6,    1,2,  ]
+gold =        [94.8,   52.0,       59.4,   61,0, ]
+
+
+[49.6, 33.8, 14.6, 2.2]
+[63.0, 19.6, 18.8, 0.0]
+[76.0, 59.2, 59.8, 54.2]

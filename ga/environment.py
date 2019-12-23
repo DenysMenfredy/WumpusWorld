@@ -16,7 +16,7 @@ class Environment:
         self.Agent.size_limit = params["size_chromosome"]
         self.Agent.fitness_function = params["fitness_function"]
         self.size_fixed = size_fixed
-        self.graphs_enableds = False  
+        self.graphs_enableds = True  
         
         
         
